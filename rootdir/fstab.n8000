@@ -1,0 +1,30 @@
+# Android fstab file.
+# <src>                                 <mnt_point>		    <type>		<mnt_flags and options>		<fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+#system                                  /system             ext4        ro,barrier=1                                                           wait,slotselect,avb=vbmeta,logical,first_stage_mount
+#vendor                                  /vendor             ext4        ro,barrier=1                                                           wait,slotselect,avb,logical,first_stage_mount
+#product                                 /product            ext4        ro,barrier=1                                                           wait,slotselect,avb,logical,first_stage_mount
+
+/dev/mmcblk2p3                          /efs			    ext4		nosuid,nodev,noatime,journal_async_commit,errors=panic                  wait,check
+/dev/mmcblk2p9                          /system        	    ext4		ro,noatime,errors=panic                                                 wait,first_stage_mount
+/dev/mmcblk2p8                          /cache              ext4        nosuid,nodev,noatime,journal_async_commit,errors=panic                  wait,check,formattable
+/dev/mmcblk2p12                         /data			    ext4		nosuid,nodev,noatime,noauto_da_alloc,journal_async_commit,errors=panic  latemount,wait,check,formattable
+/dev/mmcblk2p11                         /misc               emmc		defaults		                                                        defaults
+/dev/mmcblk2p7                          /firmware/radio     emmc		ro,uid=1000,gid=0		                                                wait
+
+/dev/mmcblk2p5                          /boot				emmc		defaults		                                                        recoveryonly
+
+# BOTA0     -> /dev/mmcblk2p1
+# BOTA1     -> /dev/mmcblk2p2
+# EFS       -> /dev/mmcblk2p3
+# PARAM     -> /dev/mmcblk2p4
+# BOOT      -> /dev/mmcblk2p5
+# RECOVERY  -> /dev/mmcblk2p6
+# RADIO     -> /dev/mmcblk2p7
+# CACHE     -> /dev/mmcblk2p8 
+# SYSTEM    -> /dev/mmcblk2p9
+# HIDDEN    -> /dev/mmcblk2p10
+# OTA       -> /dev/mmcblk2p11
+# USERDATA  -> /dev/mmcblk2p12
