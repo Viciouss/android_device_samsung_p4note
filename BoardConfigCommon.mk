@@ -1,5 +1,3 @@
-LOCAL_PATH := device/samsung/n8000
-
 ################
 # architecture #
 ################
@@ -21,7 +19,7 @@ TARGET_USES_64_BIT_BINDER := true
 
 TARGET_BOARD_PLATFORM := exynos4
 TARGET_SOC := exynos4412
-TARGET_BOOTLOADER_BOARD_NAME := n8000
+TARGET_BOOTLOADER_BOARD_NAME := p4note
 TARGET_NO_BOOTLOADER := true
 
 
@@ -29,7 +27,7 @@ TARGET_NO_BOOTLOADER := true
 # filesystem #
 ##############
 
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
 # the former system partition is now used as dynamic partition
 #BOARD_SUPER_PARTITION_SIZE := 1444888576
@@ -48,8 +46,8 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1444888576
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 52388608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12620578816
-BOARD_CACHEIMAGE_PARTITION_SIZE := 825638912
-BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := f2fs
+#BOARD_CACHEIMAGE_PARTITION_SIZE := 825638912
+#BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 2048
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USES_MKE2FS := true
@@ -65,11 +63,11 @@ BOARD_USES_VENDORIMAGE := false
 TARGET_NO_KERNEL := false 
 
 BOARD_KERNEL_BASE := 0x40000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=n8000 androidboot.selinux=permissive printk.devkmsg=on
+BOARD_KERNEL_CMDLINE := androidboot.hardware=p4note androidboot.selinux=permissive printk.devkmsg=on enforcing=0
 BOARD_KERNEL_PAGESIZE := 2048
 
 #BOARD_VENDOR_KERNEL_MODULES += \
-#    $(wildcard device/samsung/n80xx/modules/*.ko)
+#    $(wildcard device/samsung/p4note/modules/*.ko)
 
 ##############
 # boot image #
@@ -91,11 +89,12 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 # graphics #
 ############
 
-BOARD_GPU_DRIVERS := lima swrast
+BOARD_GPU_DRIVERS := exynos lima swrast
 TARGET_SCREEN_DENSITY := 160
 USE_OPENGL_RENDERER := true
 TARGET_HARDWARE_3D := true
 TARGET_USES_HWC2 := true
+BOARD_USES_DRM_HWCOMPOSER := true
 
 #########
 # audio #
@@ -112,19 +111,24 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_HOSTAPD_DRIVER := NL80211
 
+###########
+# SELinux #
+###########
+
+BOARD_SEPOLICY_DIRS := $(LOCAL_DIR)/sepolicy
 
 ############
 # Recovery #
 ############
 ifeq ($(WITH_TWRP),true)
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.n8000
+TARGET_RECOVERY_FSTAB := $(LOCAL_DIR)/rootdir/fstab.p4note
 TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
 
 TW_HAS_NO_RECOVERY_PARTITION := true
 TW_HAS_NO_BOOT_PARTITION := true
 TW_NO_LEGACY_PROPS := true
 
-TARGET_RECOVERY_INITRC := $(LOCAL_PATH)/rootdir/init.recovery.rc
+TARGET_RECOVERY_INITRC := $(LOCAL_DIR)/rootdir/init.recovery.rc
 endif
 
 
@@ -134,6 +138,6 @@ endif
 
 # BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 PRODUCT_FULL_TREBLE_OVERRIDE := true
-# FIXME: mesa/gbm-gralloc (which are SP-HALs) depend on libexpat (which is non-SP only)
-#BOARD_VNDK_RUNTIME_DISABLE := true
-BOARD_VNDK_VERSION := current
+BOARD_VNDK_RUNTIME_DISABLE := true
+PRODUCT_USE_VNDK_OVERRIDE := false
+#BOARD_VNDK_VERSION := current

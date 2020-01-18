@@ -1,6 +1,0 @@
-on init
-    setprop ro.vold.primary_physical 1
-    
-on early-init
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
-        /vendor/lib/modules aes-arm-bs af_alg algif_aead algif_hash algif_rng algif_skcipher atmel_mxt_ts bluetooth brcmfmac brcmutil btbcm cdc-acm cdc-wdm cfg80211 chacha_generic chacha-neon cordic cpufreq_conservative cpufreq_powersave cpufreq_userspace crypto_user dh_generic ecc ecdh_generic exynos4-is-common exynos-fimc-is exynos-fimc-lite exynos-gsc font gpu-sched gspca_main hci_uart lima lrw lz4_compress lz4 lzo_compress lzo lzo-rle mac80211 microchip rfkill-gpio rfkill s5p-cec s5p-csis s5p-fimc s5p-jpeg s5p-mfc salsa20_generic sha1-arm sha1-arm-neon sha3_generic sha512-arm snd-soc-midas-wm1811 snd-soc-wm8994 snd-soc-wm-hubs usblp usbtmc uvcvideo v4l2-fwnode v4l2-mem2mem v4l2-tpg videobuf2-common videobuf2-dma-contig videobuf2-memops videobuf2-v4l2 videobuf2-vmalloc vivid xts.ko
