@@ -1,0 +1,31 @@
+# Android fstab file.
+# <src>                                 <mnt_point>            <type>        <mnt_flags and options>        <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+/dev/block/platform/soc/12550000.mmc/by-name/EFS                /efs            ext4            noatime,nosuid,nodev,errors=panic                               wait
+/dev/block/platform/soc/12550000.mmc/by-name/SYSTEM             /               ext4            noatime                                                         wait
+/dev/block/platform/soc/12550000.mmc/by-name/CACHE              /cache          ext4            ro,noatime                                                      wait
+/dev/block/platform/soc/12550000.mmc/by-name/USERDATA           /data           ext4            noatime,nosuid,nodev,noauto_da_alloc,errors=panic               wait,check,encryptable=footer
+/dev/block/platform/soc/12550000.mmc/by-name/MISC               /misc           emmc            defaults                                                        defaults
+
+/dev/block/platform/soc/12550000.mmc/by-name/BOOT               /boot           emmc            defaults                                                        recoveryonly
+/dev/block/platform/soc/12550000.mmc/by-name/RECOVERY           /recovery       emmc            defaults                                                        recoveryonly
+/dev/block/platform/soc/12550000.mmc/by-name/RADIO              /modem          emmc            defaults                                                        recoveryonly
+
+/dev/block/platform/soc/12530000.sdhci/mmc*                     auto            auto            defaults                                                        voldmanaged=sdcard1:auto,encryptable=userdata
+# /devices/platform/soc/12530000.mmc/mmc_host/mmc0*               auto            auto            defaults                                                        voldmanaged=sdcard1:auto,encryptable=userdata
+/devices/platform/soc/12480000.hsotg*					        auto		    auto		    defaults		                                                voldmanaged=usb:auto
+
+# BOTA0     -> /dev/mmcblk2p1
+# BOTA1     -> /dev/mmcblk2p2
+# EFS       -> /dev/mmcblk2p3
+# PARAM     -> /dev/mmcblk2p4
+# BOOT      -> /dev/mmcblk2p5
+# RECOVERY  -> /dev/mmcblk2p6
+# RADIO     -> /dev/mmcblk2p7
+# CACHE     -> /dev/mmcblk2p8 
+# SYSTEM    -> /dev/mmcblk2p9
+# HIDDEN    -> /dev/mmcblk2p10
+# OTA       -> /dev/mmcblk2p11
+# USERDATA  -> /dev/mmcblk2p12

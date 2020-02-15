@@ -1,23 +1,39 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.ringtone=Ring_Synth_04.ogg \
+    ro.com.android.dataroaming=true
+
+PRODUCT_PACKAGES += \
+    PhotoTable \
+    Dialer \
+    Launcher3QuickStep \
+    WallpaperPicker
+
+### common things start
+
+## general
 
 LOCAL_PATH := device/samsung/p4note
 KERNEL_PATH := kernel/samsung/n80xx
 
-PRODUCT_PACKAGES += \
-    Dialer \
-    Launcher3QuickStep \
-    WallpaperPicker \
-
 PRODUCT_MANUFACTURER := samsung
 PRODUCT_BRAND := android
-PRODUCT_PLATFORM := p4note
+PRODUCT_PLATFORM := smdk4x12
 
-#### screen configuration
+PRODUCT_CHARACTERISTICS := tablet
+
+DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
+
+#PRODUCT_PROPERTY_OVERRIDES +=
+#    ro.config.low_ram=true
+
+## screen configuration
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := 160dpi
 PRODUCT_AAPT_PREBUILT_DPI := xhdpi hdpi
 
-#### kernel
+## kernel
 ifeq ($(TARGET_PREBUILT_KERNEL),)
     LOCAL_KERNEL := $(KERNEL_PATH)/zImage-dtb
 else
@@ -26,171 +42,165 @@ endif
 
 PRODUCT_COPY_FILES += $(LOCAL_KERNEL):kernel
 
-#### file system
-
-# we want to use dynamic partitions for vendor as the device doesn't have such a partition
-# PRODUCT_USE_DYNAMIC_PARTITIONS := true
-# PRODUCT_RETROFIT_DYNAMIC_PARTITIONS := true
-
+## file system
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.p4note:root/fstab.p4note
+    $(LOCAL_PATH)/rootdir/fstab.smdk4x12:root/fstab.smdk4x12
 
-# temporary files
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/rootdir/logger.sh:root/logger.sh
-
-
-# kernel modules (temporary solution)
+## kernel modules (temporary solution)
 PRODUCT_COPY_FILES += \
-    $(KERNEL_PATH)/modules/aes-arm-bs.ko:root/lib/modules/aes-arm-bs.ko \
-    $(KERNEL_PATH)/modules/af_alg.ko:root/lib/modules/af_alg.ko \
-    $(KERNEL_PATH)/modules/algif_aead.ko:root/lib/modules/algif_aead.ko \
-    $(KERNEL_PATH)/modules/algif_hash.ko:root/lib/modules/algif_hash.ko \
-    $(KERNEL_PATH)/modules/algif_rng.ko:root/lib/modules/algif_rng.ko \
-    $(KERNEL_PATH)/modules/algif_skcipher.ko:root/lib/modules/algif_skcipher.ko \
-    $(KERNEL_PATH)/modules/atmel_mxt_ts.ko:root/lib/modules/atmel_mxt_ts.ko \
-    $(KERNEL_PATH)/modules/bluetooth.ko:root/lib/modules/bluetooth.ko \
-    $(KERNEL_PATH)/modules/brcmfmac.ko:root/lib/modules/brcmfmac.ko \
-    $(KERNEL_PATH)/modules/brcmutil.ko:root/lib/modules/brcmutil.ko \
-    $(KERNEL_PATH)/modules/btbcm.ko:root/lib/modules/btbcm.ko \
-    $(KERNEL_PATH)/modules/cdc-acm.ko:root/lib/modules/cdc-acm.ko \
-    $(KERNEL_PATH)/modules/cdc-wdm.ko:root/lib/modules/cdc-wdm.ko \
-    $(KERNEL_PATH)/modules/cfg80211.ko:root/lib/modules/cfg80211.ko \
-    $(KERNEL_PATH)/modules/chacha_generic.ko:root/lib/modules/chacha_generic.ko \
-    $(KERNEL_PATH)/modules/chacha-neon.ko:root/lib/modules/chacha-neon.ko \
-    $(KERNEL_PATH)/modules/cordic.ko:root/lib/modules/cordic.ko \
-    $(KERNEL_PATH)/modules/cpufreq_conservative.ko:root/lib/modules/cpufreq_conservative.ko \
-    $(KERNEL_PATH)/modules/cpufreq_powersave.ko:root/lib/modules/cpufreq_powersave.ko \
-    $(KERNEL_PATH)/modules/cpufreq_userspace.ko:root/lib/modules/cpufreq_userspace.ko \
-    $(KERNEL_PATH)/modules/crypto_user.ko:root/lib/modules/crypto_user.ko \
-    $(KERNEL_PATH)/modules/dh_generic.ko:root/lib/modules/dh_generic.ko \
-    $(KERNEL_PATH)/modules/ecc.ko:root/lib/modules/ecc.ko \
-    $(KERNEL_PATH)/modules/ecdh_generic.ko:root/lib/modules/ecdh_generic.ko \
-    $(KERNEL_PATH)/modules/exynos4-is-common.ko:root/lib/modules/exynos4-is-common.ko \
-    $(KERNEL_PATH)/modules/exynos-fimc-is.ko:root/lib/modules/exynos-fimc-is.ko \
-    $(KERNEL_PATH)/modules/exynos-fimc-lite.ko:root/lib/modules/exynos-fimc-lite.ko \
-    $(KERNEL_PATH)/modules/exynos-gsc.ko:root/lib/modules/exynos-gsc.ko \
-    $(KERNEL_PATH)/modules/font.ko:root/lib/modules/font.ko \
-    $(KERNEL_PATH)/modules/gpu-sched.ko:root/lib/modules/gpu-sched.ko \
-    $(KERNEL_PATH)/modules/gspca_main.ko:root/lib/modules/gspca_main.ko \
-    $(KERNEL_PATH)/modules/hci_uart.ko:root/lib/modules/hci_uart.ko \
-    $(KERNEL_PATH)/modules/lima.ko:root/lib/modules/lima.ko \
-    $(KERNEL_PATH)/modules/lrw.ko:root/lib/modules/lrw.ko \
-    $(KERNEL_PATH)/modules/lz4_compress.ko:root/lib/modules/lz4_compress.ko \
-    $(KERNEL_PATH)/modules/lz4_decompress.ko:root/lib/modules/lz4_decompress.ko \
-    $(KERNEL_PATH)/modules/lz4.ko:root/lib/modules/lz4.ko \
-    $(KERNEL_PATH)/modules/lzo_compress.ko:root/lib/modules/lzo_compress.ko \
-    $(KERNEL_PATH)/modules/lzo_decompress.ko:root/lib/modules/lzo_decompress.ko \
-    $(KERNEL_PATH)/modules/lzo.ko:root/lib/modules/lzo.ko \
-    $(KERNEL_PATH)/modules/lzo-rle.ko:root/lib/modules/lzo-rle.ko \
-    $(KERNEL_PATH)/modules/mac80211.ko:root/lib/modules/mac80211.ko \
-    $(KERNEL_PATH)/modules/microchip.ko:root/lib/modules/microchip.ko \
-    $(KERNEL_PATH)/modules/rfkill-gpio.ko:root/lib/modules/rfkill-gpio.ko \
-    $(KERNEL_PATH)/modules/rfkill.ko:root/lib/modules/rfkill.ko \
-    $(KERNEL_PATH)/modules/s5p-cec.ko:root/lib/modules/s5p-cec.ko \
-    $(KERNEL_PATH)/modules/s5p-csis.ko:root/lib/modules/s5p-csis.ko \
-    $(KERNEL_PATH)/modules/s5p-fimc.ko:root/lib/modules/s5p-fimc.ko \
-    $(KERNEL_PATH)/modules/s5p-jpeg.ko:root/lib/modules/s5p-jpeg.ko \
-    $(KERNEL_PATH)/modules/s5p-mfc.ko:root/lib/modules/s5p-mfc.ko \
-    $(KERNEL_PATH)/modules/salsa20_generic.ko:root/lib/modules/salsa20_generic.ko \
-    $(KERNEL_PATH)/modules/sha1-arm.ko:root/lib/modules/sha1-arm.ko \
-    $(KERNEL_PATH)/modules/sha1-arm-neon.ko:root/lib/modules/sha1-arm-neon.ko \
-    $(KERNEL_PATH)/modules/sha3_generic.ko:root/lib/modules/sha3_generic.ko \
-    $(KERNEL_PATH)/modules/sha512-arm.ko:root/lib/modules/sha512-arm.ko \
-    $(KERNEL_PATH)/modules/usblp.ko:root/lib/modules/usblp.ko \
-    $(KERNEL_PATH)/modules/usbtmc.ko:root/lib/modules/usbtmc.ko \
-    $(KERNEL_PATH)/modules/uvcvideo.ko:root/lib/modules/uvcvideo.ko \
-    $(KERNEL_PATH)/modules/v4l2-fwnode.ko:root/lib/modules/v4l2-fwnode.ko \
-    $(KERNEL_PATH)/modules/v4l2-mem2mem.ko:root/lib/modules/v4l2-mem2mem.ko \
-    $(KERNEL_PATH)/modules/v4l2-tpg.ko:root/lib/modules/v4l2-tpg.ko \
-    $(KERNEL_PATH)/modules/videobuf2-common.ko:root/lib/modules/videobuf2-common.ko \
-    $(KERNEL_PATH)/modules/videobuf2-dma-contig.ko:root/lib/modules/videobuf2-dma-contig.ko \
-    $(KERNEL_PATH)/modules/videobuf2-memops.ko:root/lib/modules/videobuf2-memops.ko \
-    $(KERNEL_PATH)/modules/videobuf2-v4l2.ko:root/lib/modules/videobuf2-v4l2.ko \
-    $(KERNEL_PATH)/modules/videobuf2-vmalloc.ko:root/lib/modules/videobuf2-vmalloc.ko \
-    $(KERNEL_PATH)/modules/vivid.ko:root/lib/modules/vivid.ko \
-    $(KERNEL_PATH)/modules/xts.ko:root/lib/modules/xts.ko
+    $(KERNEL_PATH)/modules/aes-arm-bs.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/aes-arm-bs.ko \
+    $(KERNEL_PATH)/modules/af_alg.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/af_alg.ko \
+    $(KERNEL_PATH)/modules/algif_aead.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/algif_aead.ko \
+    $(KERNEL_PATH)/modules/algif_hash.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/algif_hash.ko \
+    $(KERNEL_PATH)/modules/algif_rng.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/algif_rng.ko \
+    $(KERNEL_PATH)/modules/algif_skcipher.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/algif_skcipher.ko \
+    $(KERNEL_PATH)/modules/atmel_mxt_ts.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/atmel_mxt_ts.ko \
+    $(KERNEL_PATH)/modules/bluetooth.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/bluetooth.ko \
+    $(KERNEL_PATH)/modules/brcmfmac.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/brcmfmac.ko \
+    $(KERNEL_PATH)/modules/brcmutil.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/brcmutil.ko \
+    $(KERNEL_PATH)/modules/btbcm.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/btbcm.ko \
+    $(KERNEL_PATH)/modules/cdc-acm.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cdc-acm.ko \
+    $(KERNEL_PATH)/modules/cdc-wdm.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cdc-wdm.ko \
+    $(KERNEL_PATH)/modules/cfg80211.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cfg80211.ko \
+    $(KERNEL_PATH)/modules/chacha_generic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/chacha_generic.ko \
+    $(KERNEL_PATH)/modules/chacha-neon.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/chacha-neon.ko \
+    $(KERNEL_PATH)/modules/cordic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cordic.ko \
+    $(KERNEL_PATH)/modules/cpufreq_conservative.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cpufreq_conservative.ko \
+    $(KERNEL_PATH)/modules/cpufreq_powersave.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cpufreq_powersave.ko \
+    $(KERNEL_PATH)/modules/cpufreq_userspace.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/cpufreq_userspace.ko \
+    $(KERNEL_PATH)/modules/crypto_user.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/crypto_user.ko \
+    $(KERNEL_PATH)/modules/dh_generic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/dh_generic.ko \
+    $(KERNEL_PATH)/modules/ecc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/ecc.ko \
+    $(KERNEL_PATH)/modules/ecdh_generic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/ecdh_generic.ko \
+    $(KERNEL_PATH)/modules/exynos4-is-common.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/exynos4-is-common.ko \
+    $(KERNEL_PATH)/modules/exynos-fimc-is.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/exynos-fimc-is.ko \
+    $(KERNEL_PATH)/modules/exynos-fimc-lite.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/exynos-fimc-lite.ko \
+    $(KERNEL_PATH)/modules/exynos-gsc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/exynos-gsc.ko \
+    $(KERNEL_PATH)/modules/font.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/font.ko \
+    $(KERNEL_PATH)/modules/gspca_main.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/gspca_main.ko \
+    $(KERNEL_PATH)/modules/hci_uart.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/hci_uart.ko \
+    $(KERNEL_PATH)/modules/lrw.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lrw.ko \
+    $(KERNEL_PATH)/modules/lz4_compress.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lz4_compress.ko \
+    $(KERNEL_PATH)/modules/lz4.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lz4.ko \
+    $(KERNEL_PATH)/modules/lzo_compress.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lzo_compress.ko \
+    $(KERNEL_PATH)/modules/lzo.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lzo.ko \
+    $(KERNEL_PATH)/modules/lzo-rle.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lzo-rle.ko \
+    $(KERNEL_PATH)/modules/mac80211.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/mac80211.ko \
+    $(KERNEL_PATH)/modules/microchip.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/microchip.ko \
+    $(KERNEL_PATH)/modules/rfkill-gpio.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/rfkill-gpio.ko \
+    $(KERNEL_PATH)/modules/rfkill.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/rfkill.ko \
+    $(KERNEL_PATH)/modules/s5p-cec.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/s5p-cec.ko \
+    $(KERNEL_PATH)/modules/s5p-csis.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/s5p-csis.ko \
+    $(KERNEL_PATH)/modules/s5p-fimc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/s5p-fimc.ko \
+    $(KERNEL_PATH)/modules/s5p-jpeg.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/s5p-jpeg.ko \
+    $(KERNEL_PATH)/modules/s5p-mfc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/s5p-mfc.ko \
+    $(KERNEL_PATH)/modules/salsa20_generic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/salsa20_generic.ko \
+    $(KERNEL_PATH)/modules/sha1-arm.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/sha1-arm.ko \
+    $(KERNEL_PATH)/modules/sha1-arm-neon.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/sha1-arm-neon.ko \
+    $(KERNEL_PATH)/modules/sha3_generic.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/sha3_generic.ko \
+    $(KERNEL_PATH)/modules/sha512-arm.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/sha512-arm.ko \
+    $(KERNEL_PATH)/modules/usblp.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/usblp.ko \
+    $(KERNEL_PATH)/modules/usbtmc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/usbtmc.ko \
+    $(KERNEL_PATH)/modules/uvcvideo.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/uvcvideo.ko \
+    $(KERNEL_PATH)/modules/v4l2-fwnode.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/v4l2-fwnode.ko \
+    $(KERNEL_PATH)/modules/v4l2-mem2mem.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/v4l2-mem2mem.ko \
+    $(KERNEL_PATH)/modules/v4l2-tpg.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/v4l2-tpg.ko \
+    $(KERNEL_PATH)/modules/videobuf2-common.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/videobuf2-common.ko \
+    $(KERNEL_PATH)/modules/videobuf2-dma-contig.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/videobuf2-dma-contig.ko \
+    $(KERNEL_PATH)/modules/videobuf2-memops.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/videobuf2-memops.ko \
+    $(KERNEL_PATH)/modules/videobuf2-v4l2.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/videobuf2-v4l2.ko \
+    $(KERNEL_PATH)/modules/videobuf2-vmalloc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/videobuf2-vmalloc.ko \
+    $(KERNEL_PATH)/modules/vivid.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/vivid.ko \
+    $(KERNEL_PATH)/modules/xts.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/xts.ko \
 
 
-# display setting
+## display setting
 TARGET_SCREEN_HEIGHT := 1280
 TARGET_SCREEN_WIDTH := 720
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=160
 
+## media
+# PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/media_profiles.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_profiles.xml \
+    $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs.xml
 
-# graphics
+## audio
 PRODUCT_PACKAGES += \
-	android.hardware.graphics.allocator@2.0-impl \
-    android.hardware.graphics.allocator@2.0-service \
-    android.hardware.graphics.composer@2.1-impl \
-    android.hardware.graphics.composer@2.1-service \
-    android.hardware.graphics.mapper@2.0-impl \
-    android.hardware.renderscript@1.0-impl \
-	gralloc.gbm \
-	hwcomposer.drm \
-	libGLES_mesa \
+    audio.a2dp.default \
+    audio.primary.smdk4x12 \
+    audio.r_submix.default \
+    audio.usb.default
 
-# keymaster HAL packages
-PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service \
-
-# DRM HAL
-PRODUCT_PACKAGES += \
-    android.hardware.drm@1.0-impl \
-    android.hardware.drm@1.0-service \
-    libdrm.exynos
-
-PRODUCT_PROPERTY_OVERRIDES += \
-	debug.drm.mode.force=1280x800 \
-    gralloc.drm.device=/dev/dri/renderD129 \
-	ro.opengles.version=131072
-
-# power HAL packages
-PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-impl
-
-# init
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/init.p4note.rc:root/init.p4note.rc \
-    $(LOCAL_PATH)/rootdir/init.p4note.usb.rc:root/init.p4note.usb.rc
+    $(LOCAL_PATH)/configs/tiny_hw.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sound/n80xx \
+    $(LOCAL_PATH)/configs/audio_effects.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_effects.conf \
+    $(LOCAL_PATH)/configs/audio_policy.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy.conf
+
+## gatekeeper
+PRODUCT_PACKAGES += \
+	gatekeeper.default \
+
+## init
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/init.$(PRODUCT_PLATFORM).rc:root/init.$(PRODUCT_PLATFORM).rc \
+    $(LOCAL_PATH)/rootdir/init.$(PRODUCT_PLATFORM).usb.rc:root/init.$(PRODUCT_PLATFORM).usb.rc \
+    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.software.app_widgets.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.software.app_widgets.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_audio.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_telephony.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_video.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_tv.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_tv.xml 
+
+## temporary stuff
+# logging some stuff
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/temporary/logger.sh:root/logger.sh
+
+# Get root on the serial console for -eng builds
+# This can help debugging early boot issues
+ifeq ($(TARGET_BUILD_VARIANT),eng)
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/console.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/console.rc
+endif
+
+# HACK: prevent the device to go in suspend because it's annoying during early
+# development. Remove afterward as it consume way more energy this way.
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/prevent_suspend.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/prevent_suspend.sh
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/prevent_suspend.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/prevent_suspend.rc
+
+# ADB support
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.service.adb.enable=1 \
+    persist.sys.usb.config=adb
 
 # Use the default charger mode images
 PRODUCT_PACKAGES += \
     charger_res_images
 
-
-# wifi
-PRODUCT_PACKAGES += libwpa_client wpa_supplicant hostapd wificond
-PRODUCT_PROPERTY_OVERRIDES += \
+## wifi
+# PRODUCT_PACKAGES += libwpa_client wpa_supplicant hostapd wificond
+# PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=15
 
+## testing
+PRODUCT_SHIPPING_API_LEVEL := 25
 
-# testing
-PRODUCT_SHIPPING_API_LEVEL := 26
-
-
-# development helpers
-PRODUCT_PACKAGES += \
-    ssh \
-    sftp \
-    scp \
-    sshd \
-    ssh-keygen \
-    sshd_config \
-    start-ssh
-
-
-#### treble
+## treble
 PRODUCT_PACKAGES += \
 	vndk_package
 
-DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 
-PRODUCT_CHARACTERISTICS := tablet
+# local includes
+$(call inherit-product,$(LOCAL_PATH)/treble.mk)
+$(call inherit-product,$(LOCAL_PATH)/mesa.mk)
+$(call inherit-product,$(LOCAL_PATH)/wifi.mk)
+$(call inherit-product,$(LOCAL_PATH)/touch.mk)
 
-#PRODUCT_PROPERTY_OVERRIDES +=
-#    ro.config.low_ram=true
+# hardware
+$(call inherit-product-if-exists,hardware/libaudio/alsa.mk)
+# $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
+
+# framework stuff
+$(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)

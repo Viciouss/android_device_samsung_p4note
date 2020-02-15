@@ -1,7 +1,4 @@
-################
-# architecture #
-################
-
+## arch settings
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
@@ -9,70 +6,43 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_VARIANT := cortex-a9
 ARCH_ARM_HAVE_NEON := true
 
-# Binder
+## binder
 TARGET_USES_64_BIT_BINDER := true
+TARGET_SUPPORTS_32_BIT_APPS := true
+TARGET_SUPPORTS_64_BIT_APPS := false
 
-
-############
-# platform #
-############
-
+## platform
 TARGET_BOARD_PLATFORM := exynos4
-TARGET_SOC := exynos4412
-TARGET_BOOTLOADER_BOARD_NAME := p4note
+TARGET_SOC := exynos4x12
+TARGET_BOOTLOADER_BOARD_NAME := smdk4x12
 TARGET_NO_BOOTLOADER := true
 
-
-##############
-# filesystem #
-##############
-
+## filesystem
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
-
-# the former system partition is now used as dynamic partition
-#BOARD_SUPER_PARTITION_SIZE := 1444888576
-#BOARD_SUPER_PARTITION_METADATA_DEVICE := system
-#BOARD_SUPER_PARTITION_BLOCK_DEVICES := system
-#BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 1444888576
-
-#BOARD_SUPER_PARTITION_GROUPS := note_dynamic_partitions
-# super partition size minus 8 MiB
-#BOARD_NOTE_DYNAMIC_PARTITIONS_SIZE := 1436499968
-#BOARD_NOTE_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor
-
-#BOARD_SUPER_PARTITION_VENDOR_DEVICE_SIZE := 134217728
 
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1444888576
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 52388608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12620578816
-#BOARD_CACHEIMAGE_PARTITION_SIZE := 825638912
-#BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_CACHEIMAGE_PARTITION_SIZE := 825638912
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 2048
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USES_MKE2FS := true
-
-# we do have a vendor partition
 BOARD_USES_VENDORIMAGE := false
 
-
-#################
-# kernel config #
-#################
-
+## kernel config
 TARGET_NO_KERNEL := false 
 
 BOARD_KERNEL_BASE := 0x40000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=p4note androidboot.selinux=permissive printk.devkmsg=on enforcing=0
+# we need to set the cmd line in the kernel for now
+# BOARD_KERNEL_CMDLINE := androidboot.hardware=smdk4x12 androidboot.selinux=permissive printk.devkmsg=on enforcing=0
 BOARD_KERNEL_PAGESIZE := 2048
 
 #BOARD_VENDOR_KERNEL_MODULES += \
 #    $(wildcard device/samsung/p4note/modules/*.ko)
 
-##############
-# boot image #
-##############
-
+## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
 BOARD_KERNEL_OFFSET			:= 0x00008000
 BOARD_RAMDISK_OFFSET     	:= 0x02000000
@@ -84,44 +54,30 @@ BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 
-
-############
-# graphics #
-############
-
-BOARD_GPU_DRIVERS := exynos lima swrast
+## graphics
+# USE_OPENGL_RENDERER := true
+BOARD_GPU_DRIVERS := lima kmsro
 TARGET_SCREEN_DENSITY := 160
-USE_OPENGL_RENDERER := true
-TARGET_HARDWARE_3D := true
 TARGET_USES_HWC2 := true
 BOARD_USES_DRM_HWCOMPOSER := true
+# TARGET_HARDWARE_3D := true
 
-#########
-# audio #
-#########
-
+## audio
+BOARD_USES_GENERIC_AUDIO := false
 BOARD_USES_ALSA_AUDIO := true
 USE_XML_AUDIO_POLICY_CONF := 1
 
-################
-# generic wifi #
-################
-
+## wifi
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_HOSTAPD_DRIVER := NL80211
 
-###########
-# SELinux #
-###########
+## SELinux
+BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
 
-BOARD_SEPOLICY_DIRS := $(LOCAL_DIR)/sepolicy
-
-############
-# Recovery #
-############
+## recovery
 ifeq ($(WITH_TWRP),true)
-TARGET_RECOVERY_FSTAB := $(LOCAL_DIR)/rootdir/fstab.p4note
+TARGET_RECOVERY_FSTAB := $(LOCAL_DIR)/rootdir/fstab.smdk4x12
 TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
 
 TW_HAS_NO_RECOVERY_PARTITION := true
@@ -131,13 +87,15 @@ TW_NO_LEGACY_PROPS := true
 TARGET_RECOVERY_INITRC := $(LOCAL_DIR)/rootdir/init.recovery.rc
 endif
 
-
-##########
-# treble #
-##########
-
-# BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+## vndk
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 BOARD_VNDK_RUNTIME_DISABLE := true
-PRODUCT_USE_VNDK_OVERRIDE := false
-#BOARD_VNDK_VERSION := current
+PRODUCT_USE_VNDK_OVERRIDE := true
+BOARD_VNDK_VERSION := current
+
+## optimizations
+# Enable dex-preoptimization to speed up first boot sequence
+ifeq ($(HOST_OS),linux)
+    WITH_DEXPREOPT := true
+	DEX_PREOPT_DEFAULT := nostripping
+endif

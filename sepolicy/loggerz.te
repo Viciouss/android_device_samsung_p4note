@@ -1,4 +1,6 @@
 type loggerz, domain;
 type loggerz_exec, exec_type, file_type;
 
-init_daemon_domain(loggerz);
+init_daemon_domain(loggerz)
+
+allow loggerz null_device:chr_file { getattr open read ioctl lock append write};
