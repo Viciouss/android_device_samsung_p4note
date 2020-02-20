@@ -10,8 +10,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.gralloc=gbm \
     ro.hardware.hwcomposer=drm \
     hwc.drm.device=/dev/dri/card1 \
-    hwc.drm.use_overlay_planes=1 \
     debug.drm.mode.force=1280x800 \
     gralloc.gbm.device=/dev/dri/card1 \
-    gralloc.drm.device=/dev/dri/renderD129 \
-
