@@ -1,0 +1,8 @@
+service loggerz /bin/logger.sh
+    user root
+    group root
+    oneshot
+
+on fs
+    chmod 770 /bin/logger.sh
+    start loggerz

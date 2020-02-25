@@ -64,8 +64,6 @@ BOARD_USES_DRM_HWCOMPOSER := true
 
 ## audio
 BOARD_USES_GENERIC_AUDIO := false
-BOARD_USES_ALSA_AUDIO := true
-USE_XML_AUDIO_POLICY_CONF := 1
 
 ## wifi
 WPA_SUPPLICANT_VERSION := VER_0_8_X
@@ -73,7 +71,7 @@ BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_HOSTAPD_DRIVER := NL80211
 
 ## SELinux
-BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
+# BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
 
 ## recovery
 ifeq ($(WITH_TWRP),true)

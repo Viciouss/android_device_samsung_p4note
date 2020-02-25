@@ -155,8 +155,8 @@ PRODUCT_COPY_FILES += \
 
 ## temporary stuff
 # logging some stuff
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/temporary/logger.sh:root/logger.sh
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/logger.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/logger.sh
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/logger.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/logger.rc
 
 # Get root on the serial console for -eng builds
 # This can help debugging early boot issues
@@ -185,9 +185,9 @@ PRODUCT_PACKAGES += \
     wifi.supplicant_scan_interval=15
 
 ## testing
-PRODUCT_SHIPPING_API_LEVEL := 25
+PRODUCT_SHIPPING_API_LEVEL := 28
 
-## treble
+## vndk
 PRODUCT_PACKAGES += \
 	vndk_package
 
