@@ -1,0 +1,29 @@
+<audiohal>
+    <mixer card="0">
+        <init>
+            <ctl name="SPK Switch" val="1"/>
+            <ctl name="AIF1DAC1 Volume" val="96"/>
+            <ctl name="AIF1 Boost Volume" val="0"/>
+            <ctl name="DAC1 Volume" val="96"/>
+            <ctl name="Left Output Mixer DAC Volume" val="7"/>
+            <ctl name="Right Output Mixer DAC Volume" val="7"/>
+            <ctl name="SPKL DAC1 Volume" val="1"/>
+            <ctl name="SPKR DAC1 Volume" val="1"/>
+            <ctl name="Speaker Mixer Volume" val="3"/>
+            <ctl name="Speaker Boost Volume" val="7"/>
+            <ctl name="Speaker Volume" val="60"/>
+            <ctl name="AIF1DAC1 EQ Switch" val="1"/>
+            <ctl name="AIF1DAC1 EQ1 Volume" val="9"/>
+            <ctl name="AIF1DAC1 EQ2 Volume" val="7"/>
+            <ctl name="AIF1DAC1 EQ3 Volume" val="10"/>
+            <ctl name="AIF1DAC1 EQ4 Volume" val="13"/>
+            <ctl name="AIF1DAC1 EQ5 Volume" val="12"/>
+        </init>
+    </mixer>
+
+    <stream type="pcm" dir="out" card="0" device="0" rate="48000">
+    </stream>
+
+    <stream type="pcm" dir="in" card="0" device="0" rate="48000">
+    </stream>
+</audiohal>

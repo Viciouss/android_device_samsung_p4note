@@ -12,14 +12,9 @@ on early-init
     mount debugfs debugfs /sys/kernel/debug
     chmod 0755 /sys/kernel/debug
 
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules \
-        aes-arm-bs.ko af_alg.ko algif_aead.ko algif_hash.ko algif_rng.ko algif_skcipher.ko atmel_mxt_ts.ko bluetooth.ko brcmfmac.ko brcmutil.ko \
-        btbcm.ko cdc-acm.ko cdc-wdm.ko cfg80211.ko chacha_generic.ko chacha-neon.ko cordic.ko cpufreq_conservative.ko cpufreq_powersave.ko \
-        cpufreq_userspace.ko crypto_user.ko dh_generic.ko ecc.ko ecdh_generic.ko exynos4-is-common.ko exynos-fimc-is.ko exynos-fimc-lite.ko \
-        exynos-gsc.ko font.ko gspca_main.ko hci_uart.ko lrw.ko lz4_compress.ko lz4.ko lzo_compress.ko lzo.ko lzo-rle.ko mac80211.ko microchip.ko \
-        rfkill-gpio.ko rfkill.ko s5p-cec.ko s5p-csis.ko s5p-fimc.ko s5p-jpeg.ko s5p-mfc.ko salsa20_generic.ko sha1-arm.ko sha1-arm-neon.ko \
-        sha3_generic.ko sha512-arm.ko usblp.ko usbtmc.ko uvcvideo.ko v4l2-fwnode.ko v4l2-mem2mem.ko v4l2-tpg.ko videobuf2-common.ko \
-        videobuf2-dma-contig.ko videobuf2-memops.ko videobuf2-v4l2.ko videobuf2-vmalloc.ko vivid.ko xts.ko
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules aes-arm-bs.ko sha1-arm.ko sha1-arm-neon.ko sha512-arm.ko chacha-neon.ko dh_generic.ko crypto_user.ko sha3_generic.ko lrw.ko xts.ko salsa20_generic.ko chacha_generic.ko lzo.ko lzo-rle.ko lz4.ko af_alg.ko algif_hash.ko algif_skcipher.ko algif_rng.ko algif_aead.ko ecc.ko ecdh_generic.ko microchip.ko brcmutil.ko brcmfmac.ko cdc-acm.ko usblp.ko cdc-wdm.ko usbtmc.ko atmel_mxt_ts.ko v4l2-fwnode.ko v4l2-mem2mem.ko v4l2-tpg.ko videobuf2-common.ko videobuf2-v4l2.ko videobuf2-memops.ko videobuf2-vmalloc.ko videobuf2-dma-contig.ko vivid.ko s5p-csis.ko exynos-fimc-lite.ko exynos-fimc-is.ko s5p-fimc.ko exynos4-is-common.ko s5p-jpeg.ko s5p-mfc.ko s5p-cec.ko exynos-gsc.ko uvcvideo.ko gspca_main.ko cpufreq_powersave.ko cpufreq_userspace.ko cpufreq_conservative.ko hci_uart.ko btbcm.ko cfg80211.ko bluetooth.ko mac80211.ko rfkill.ko rfkill-gpio.ko cordic.ko lzo_compress.ko lz4_compress.ko font.ko
+
+    setprop ro.hardware.audio.primary smdk4x12
 
 on init
     # we need this to do hardware init (at least the touchpad)
@@ -42,6 +37,8 @@ on fs
 
     chmod 777 /dev/dri/card0
     chmod 777 /dev/dri/renderD128
+    chmod 777 /dev/dri/card1
+    chmod 777 /dev/dri/renderD129
     chmod 777 /dev/graphics/fb0
 
     chmod 770 /logger.sh
@@ -49,7 +46,11 @@ on fs
 
 on late-fs
     start bootanim
-    	
+
+on post-fs-data
+    # Set indication (checked by vold) that we have finished this action
+    setprop vold.post_fs_data_done 1
+	
 service loggerz /logger.sh
     user root
     group root
