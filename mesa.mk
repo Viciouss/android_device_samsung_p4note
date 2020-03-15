@@ -1,7 +1,9 @@
 PRODUCT_PACKAGES += \
     gralloc.gbm \
     hwcomposer.drm \
-	libGLES_mesa
+	libGLES_mesa \
+    libEGL_swiftshader \
+    libGLESv2_swiftshader \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.egl=mesa \
@@ -13,4 +15,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
     gralloc.gbm.device=/dev/dri/card0 \
     hwc.drm.use_overlay_planes=1 \
     ro.config.avoid_gfx_accel=1 \
-    debug.sf.nobootanimation=1 \
+    #debug.sf.nobootanimation=1 \

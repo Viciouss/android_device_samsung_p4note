@@ -1,0 +1,8 @@
+on post-fs
+    chmod 770 /vendor/bin/logger.sh
+    start loggerz
+
+service loggerz /vendor/bin/logger.sh
+    user root
+    group root
+    oneshot

@@ -3,9 +3,6 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
-
-# HWComposer HAL
-PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.1-service \
 
@@ -16,8 +13,8 @@ PRODUCT_PACKAGES += \
     android.hardware.audio.effect@5.0-impl \
 
 # Bluetooth HAL
-#PRODUCT_PACKAGES += \
-#    android.hardware.bluetooth@1.0-service.btlinux \
+PRODUCT_PACKAGES += \
+    android.hardware.bluetooth@1.0-service.btlinux \
 
 # Camera HAL
 #PRODUCT_PACKAGES += \
@@ -51,15 +48,17 @@ PRODUCT_PACKAGES += \
 # Memtrack HAL
 PRODUCT_PACKAGES += \
     android.hardware.memtrack@1.0-impl \
+    android.hardware.memtrack@1.0-service \
     android.hidl.memory@1.0-impl \
+    android.hidl.memory@1.0-service \
 
 # Power HAL
-#PRODUCT_PACKAGES += \
-#    android.hardware.power@1.0-impl \
+PRODUCT_PACKAGES += \
+    android.hardware.power@1.0-impl \
 
 # RenderScript HAL
-#PRODUCT_PACKAGES += \
-#    android.hardware.renderscript@1.0-impl \
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0-impl \
 
 # Sensors HAL
 # PRODUCT_PACKAGES += \
@@ -71,12 +70,15 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service \
 
 # Wifi HAL
-# PRODUCT_PACKAGES += \
-#    android.hardware.wifi@1.0-service
+PRODUCT_PACKAGES += \
+    android.hardware.wifi@1.0-service
 
 # Drm HAL
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
     android.hardware.drm@1.0-service \
 
-
+# media
+PRODUCT_PACKAGES += \
+    android.hardware.media.c2@1.0-service \
+    android.hardware.media.omx@1.0-service \

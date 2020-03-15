@@ -24,12 +24,13 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1444888576
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 52388608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12620578816
-BOARD_CACHEIMAGE_PARTITION_SIZE := 825638912
-BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_VENDORIMAGE_PARTITION_SIZE := 825638912
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 2048
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USES_MKE2FS := true
-BOARD_USES_VENDORIMAGE := false
+BOARD_USES_VENDORIMAGE := true
+TARGET_COPY_OUT_VENDOR := vendor
 
 ## kernel config
 TARGET_NO_KERNEL := false 
@@ -39,8 +40,21 @@ BOARD_KERNEL_BASE := 0x40000000
 # BOARD_KERNEL_CMDLINE := androidboot.hardware=smdk4x12 androidboot.selinux=permissive printk.devkmsg=on enforcing=0
 BOARD_KERNEL_PAGESIZE := 2048
 
-#BOARD_VENDOR_KERNEL_MODULES += \
-#    $(wildcard device/samsung/p4note/modules/*.ko)
+VENDOR_LKM_DIR := $(KERNEL_PATH)/modules
+## kernel modules (temporary solution)
+BOARD_VENDOR_KERNEL_MODULES := \
+    $(VENDOR_LKM_DIR)/atmel_mxt_ts.ko \
+    $(VENDOR_LKM_DIR)/bluetooth.ko \
+    $(VENDOR_LKM_DIR)/brcmfmac.ko \
+    $(VENDOR_LKM_DIR)/brcmutil.ko \
+    $(VENDOR_LKM_DIR)/cfg80211.ko \
+    $(VENDOR_LKM_DIR)/cpufreq_conservative.ko \
+    $(VENDOR_LKM_DIR)/cpufreq_powersave.ko \
+    $(VENDOR_LKM_DIR)/cpufreq_userspace.ko \
+    $(VENDOR_LKM_DIR)/hci_uart.ko \
+    $(VENDOR_LKM_DIR)/mac80211.ko \
+    $(VENDOR_LKM_DIR)/rfkill-gpio.ko \
+    $(VENDOR_LKM_DIR)/rfkill.ko \
 
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
@@ -56,6 +70,7 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 
 ## graphics
 BOARD_GPU_DRIVERS := lima kmsro
+BUILD_EMULATOR_OPENGL := true
 TARGET_SCREEN_DENSITY := 160
 USE_OPENGL_RENDERER := true
 BOARD_USE_LEGACY_UI := true

@@ -1,8 +1,10 @@
 #!/system/bin/sh
 #logger
 
-# rm /data/media/0/dev.log
-# find /dev > /data/media/0/dev.log
+sleep 15s
+
+rm /data/media/0/dev.log
+find /dev > /data/media/0/dev.log
 
 rm /data/media/0/config.log
 find /config > /data/media/0/config.log
