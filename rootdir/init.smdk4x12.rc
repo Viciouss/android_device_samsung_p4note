@@ -10,8 +10,8 @@ import /vendor/etc/init/hw/init.${ro.hardware}.usb.rc
 
 on early-init
     
-    # we need this to do hardware init
-    setprop ro.boot.hardware.revision ${ro.revision}
+    # temporary workaround, need to determine system_rev from atags and load correct file
+    write /sys/module/firmware_class/parameters/path /vendor/lib/firmware/touch/6/
 
     exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules brcmutil.ko brcmfmac.ko atmel_mxt_ts.ko cpufreq_powersave.ko cpufreq_userspace.ko cpufreq_conservative.ko hci_uart.ko cfg80211.ko bluetooth.ko mac80211.ko rfkill.ko rfkill-gpio.ko
 
@@ -20,9 +20,8 @@ on early-init
 
     setprop ro.hardware.audio.primary smdk4x12
 
-
 on fs
-    # first stage init mounts everything for us
+    # non early mounts
     mount_all /fstab.${ro.hardware}
     
     chmod 777 /dev/binder
@@ -41,8 +40,6 @@ on fs
     chmod 777 /dev/dri/card1
     chmod 777 /dev/dri/renderD129
     chmod 777 /dev/graphics/fb0
-
-    chmod 777 /dev/ion
 
 on late-fs
     start bootanim
