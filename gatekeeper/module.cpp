@@ -103,7 +103,7 @@ static int p4note_gatekeeper_open(const hw_module_t *module, const char *name,
     s_device.device.delete_all_users = nullptr;
 
     *device = &s_device.device.common;
-    ALOGE("called %s with gate keeper %p device %p\n", __func__, s_gatekeeper, *device);
+    ALOGI("called %s with gate keeper %p device %p\n", __func__, s_gatekeeper, *device);
 
     return 0;
 }
