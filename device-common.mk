@@ -91,6 +91,10 @@ PRODUCT_COPY_FILES += \
 ## overlay
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay-common \
 
+## ueventd
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/ueventd.common.rc:$(TARGET_COPY_OUT_VENDOR)/ueventd.rc \
+
 ## hardware configs
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/android.hardware.screen.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.screen.xml \
