@@ -13,10 +13,7 @@ on early-init
     # temporary workaround, need to determine system_rev from atags and load correct file
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware/touch/6/
 
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules brcmutil.ko brcmfmac.ko atmel_mxt_ts.ko cpufreq_powersave.ko cpufreq_userspace.ko cpufreq_conservative.ko hci_uart.ko cfg80211.ko bluetooth.ko mac80211.ko rfkill.ko rfkill-gpio.ko
-
-    mount debugfs debugfs /sys/kernel/debug
-    chmod 0755 /sys/kernel/debug
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules kheaders.ko brcmutil.ko brcmfmac.ko atmel_mxt_ts.ko cpufreq_powersave.ko cpufreq_userspace.ko cpufreq_conservative.ko hci_uart.ko cfg80211.ko bluetooth.ko mac80211.ko rfkill.ko rfkill-gpio.ko
 
     setprop ro.hardware.audio.primary smdk4x12
 
