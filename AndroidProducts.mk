@@ -6,7 +6,7 @@ PRODUCT_MAKEFILES := \
 
 
 COMMON_LUNCH_CHOICES := \
-	n8000-eng \
-	n8010-eng \
-	n8013-eng \
-	n8020-eng
+	n8000-userdebug \
+	n8010-userdebug \
+	n8013-userdebug \
+	n8020-userdebug
