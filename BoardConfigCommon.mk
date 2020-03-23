@@ -40,22 +40,10 @@ BOARD_KERNEL_BASE := 0x40000000
 # BOARD_KERNEL_CMDLINE := androidboot.hardware=smdk4x12 androidboot.selinux=permissive printk.devkmsg=on enforcing=0
 BOARD_KERNEL_PAGESIZE := 2048
 
-VENDOR_LKM_DIR := $(KERNEL_PATH)/modules
 ## kernel modules (temporary solution)
 BOARD_VENDOR_KERNEL_MODULES := \
-    $(VENDOR_LKM_DIR)/atmel_mxt_ts.ko \
-    $(VENDOR_LKM_DIR)/bluetooth.ko \
-    $(VENDOR_LKM_DIR)/brcmfmac.ko \
-    $(VENDOR_LKM_DIR)/brcmutil.ko \
-    $(VENDOR_LKM_DIR)/cfg80211.ko \
-    $(VENDOR_LKM_DIR)/cpufreq_conservative.ko \
-    $(VENDOR_LKM_DIR)/cpufreq_powersave.ko \
-    $(VENDOR_LKM_DIR)/cpufreq_userspace.ko \
-    $(VENDOR_LKM_DIR)/hci_uart.ko \
-    $(VENDOR_LKM_DIR)/mac80211.ko \
-    $(VENDOR_LKM_DIR)/rfkill-gpio.ko \
-    $(VENDOR_LKM_DIR)/rfkill.ko \
-
+    $(wildcard $(KERNEL_PATH)/modules/*.ko)
+    
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
 BOARD_KERNEL_OFFSET			:= 0x00008000
