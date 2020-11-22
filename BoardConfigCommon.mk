@@ -42,7 +42,7 @@ BOARD_KERNEL_PAGESIZE := 2048
 
 ## kernel modules (temporary solution)
 BOARD_VENDOR_KERNEL_MODULES := \
-    $(wildcard $(KERNEL_PATH)/modules/*.ko)
+    $(wildcard $(KERNEL_PATH)/modules/*)
     
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
@@ -65,6 +65,11 @@ USE_OPENGL_RENDERER := true
 BOARD_USES_GENERIC_AUDIO := false
 BOARD_USES_ALSA_AUDIO := true
 USE_XML_AUDIO_POLICY_CONF := 1
+
+## bluetooth
+BOARD_HAVE_BLUETOOTH := false
+#BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_DIR)/bluetooth
+#BOARD_CUSTOM_BT_CONFIG := $(LOCAL_DIR)/bluetooth/vnd_smdk4x12.txt
 
 ## wifi
 WPA_SUPPLICANT_VERSION := VER_0_8_X
@@ -98,3 +103,5 @@ ifeq ($(HOST_OS),linux)
     WITH_DEXPREOPT := true
 	DEX_PREOPT_DEFAULT := nostripping
 endif
+
+BOARD_USES_GRALLOC_HANDLE := true

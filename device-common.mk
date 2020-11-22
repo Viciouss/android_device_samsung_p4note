@@ -8,7 +8,13 @@ PRODUCT_PACKAGES += \
     PhotoTable \
     Dialer \
     Launcher3QuickStep \
-    WallpaperPicker
+    WallpaperPicker2 \
+    Gallery2 \
+    Contacts \
+    Camera2 \
+    Email \
+    HTMLViewer \
+    Music
 
 ### common things start
 
@@ -24,6 +30,8 @@ PRODUCT_PLATFORM := smdk4x12
 PRODUCT_CHARACTERISTICS := tablet
 
 DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
+
+AB_OTA_UPDATER := false
 
 # Build and run only ART
 PRODUCT_RUNTIMES := runtime_libart_default
@@ -81,12 +89,23 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init.$(PRODUCT_PLATFORM).rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).rc \
     $(LOCAL_PATH)/rootdir/init.$(PRODUCT_PLATFORM).usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.$(PRODUCT_PLATFORM).usb.rc \
-    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
+
+## permissions
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.software.cts.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.cts.xml \
     frameworks/native/data/etc/android.software.app_widgets.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.app_widgets.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_tv.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_tv.xml \
+    frameworks/native/data/etc/android.software.backup.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.backup.xml \
+    frameworks/native/data/etc/android.software.voice_recognizers.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.voice_recognizers.xml \
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.accessory.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/native/data/etc/android.software.device_admin.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.device_admin.xml
+
+## media
+PRODUCT_COPY_FILES += \
+    frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
+    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
 
 ## overlay
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay-common \
@@ -100,20 +119,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/android.hardware.screen.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.screen.xml \
     $(LOCAL_PATH)/configs/android.software.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.xml \
 
-# Get root on the serial console for -eng builds
-# This can help debugging early boot issues
-ifeq ($(TARGET_BUILD_VARIANT),eng)
-PRODUCT_COPY_FILES += $(LOCAL_PATH)/temporary/console.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/console.rc
-endif
-
-# HACK: prevent the device to go in suspend because it's annoying during early
-# development. Remove afterward as it consume way more energy this way.
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/temporary/prevent_suspend.sh:$(TARGET_COPY_OUT_VENDOR)/bin/prevent_suspend.sh \
-    $(LOCAL_PATH)/temporary/prevent_suspend.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/prevent_suspend.rc \
-    $(LOCAL_PATH)/temporary/logger.sh:$(TARGET_COPY_OUT_VENDOR)/bin/logger.sh \
-    $(LOCAL_PATH)/temporary/logger.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/logger.rc \
-
 # ADB support
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.service.adb.enable=1 \
@@ -122,12 +127,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Use the default charger mode images
 PRODUCT_PACKAGES += \
     charger_res_images \
-
-## wifi
-# PRODUCT_PACKAGES += libwpa_client wpa_supplicant hostapd wificond
-# PRODUCT_PROPERTY_OVERRIDES += \
-    wifi.interface=wlan0 \
-    wifi.supplicant_scan_interval=15
 
 ## testing
 PRODUCT_SHIPPING_API_LEVEL := 28
@@ -138,10 +137,12 @@ PRODUCT_PACKAGES += \
 
 
 # local includes
+# $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
 $(call inherit-product,$(LOCAL_PATH)/mesa.mk)
-$(call inherit-product,$(LOCAL_PATH)/wifi.mk)
-$(call inherit-product,$(LOCAL_PATH)/touch.mk)
+$(call inherit-product,$(LOCAL_PATH)/temporary/temporary.mk)
+$(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
+$(call inherit-product,$(LOCAL_PATH)/touchscreen/touch.mk)
 
 # hardware
 # $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)

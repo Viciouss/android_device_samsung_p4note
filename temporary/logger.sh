@@ -1,7 +1,4 @@
 #!/system/bin/sh
-#logger
-
-sleep 15s
 
 rm /data/media/0/dev.log
 find /dev > /data/media/0/dev.log

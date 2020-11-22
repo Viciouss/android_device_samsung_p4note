@@ -1,7 +1,6 @@
 # Graphics HAL
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.mapper@2.0-impl \
-    android.hardware.graphics.mapper@2.0-service \
+    android.hardware.graphics.mapper@2.0-impl-2.1 \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
     android.hardware.graphics.composer@2.1-impl \
@@ -12,10 +11,6 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-service \
     android.hardware.audio@5.0-impl \
     android.hardware.audio.effect@5.0-impl \
-
-# Bluetooth HAL
-PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-service.btlinux \
 
 # Camera HAL
 #PRODUCT_PACKAGES += \
@@ -75,16 +70,12 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-impl \
     android.hardware.usb@1.0-service \
 
-# Wifi HAL
-PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service
-
 # Drm HAL
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
     android.hardware.drm@1.0-service \
 
 # media
-PRODUCT_PACKAGES += \
-    android.hardware.media.c2@1.0-service \
-    android.hardware.media.omx@1.0-service \
+#PRODUCT_PACKAGES += \
+#    android.hardware.media.c2@1.0-service \
+#    android.hardware.media.omx@1.0-service \

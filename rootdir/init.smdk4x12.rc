@@ -1,4 +1,5 @@
 import /vendor/etc/init/hw/init.${ro.hardware}.usb.rc
+import /vendor/etc/init/hw/init.wifi.rc
 
 ## init goal order
 # early-init, init, late-init
@@ -9,39 +10,54 @@ import /vendor/etc/init/hw/init.${ro.hardware}.usb.rc
 # early-boot, boot
 
 on early-init
-    
-    # temporary workaround, need to determine system_rev from atags and load correct file
-    write /sys/module/firmware_class/parameters/path /vendor/lib/firmware/touch/6/
+    class_start console
 
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules kheaders.ko brcmutil.ko brcmfmac.ko atmel_mxt_ts.ko cpufreq_powersave.ko cpufreq_userspace.ko cpufreq_conservative.ko hci_uart.ko cfg80211.ko bluetooth.ko mac80211.ko rfkill.ko rfkill-gpio.ko
+    write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
+
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
+        /vendor/lib/modules atmel_mxt_ts.ko bfusb.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko btintel.ko btrtl.ko btsdio.ko btusb.ko cfg80211.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko mac80211.ko rfcomm.ko rfkill-gpio.ko rfkill.ko
 
     setprop ro.hardware.audio.primary smdk4x12
-
 on fs
     # non early mounts
     mount_all /fstab.${ro.hardware}
-    
-    chmod 777 /dev/binder
-    chmod 777 /dev/hwbinder
-    chmod 777 /dev/vndbinder
-    
-    chmod 755 /sys/kernel/debug
-    chmod 755 /sys/kernel/debug/sync
-    chown graphics graphics /sys/kernel/debug/sync/sw_sync
-
-    chmod 777 /sys/kernel/debug/sync/sw_sync
-    chown graphics graphics /sys/kernel/debug/sync/info
-
-    chmod 777 /dev/dri/card0
-    chmod 777 /dev/dri/renderD128
-    chmod 777 /dev/dri/card1
-    chmod 777 /dev/dri/renderD129
-    chmod 777 /dev/graphics/fb0
-
-on late-fs
-    start bootanim
 
 on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
-	
+
+on late-fs
+    start bootanim
+
+on zygote-start
+    # Create the directories used by the Wireless subsystem
+    mkdir /data/vendor/wifi 0771 wifi wifi
+    mkdir /data/vendor/wifi/wpa 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
+
+    #Create directories for wifihal services
+    mkdir /dev/socket/wifihal 0770 wifi wifi
+    chmod 2770 /dev/socket/wifihal
+
+on early-boot
+    mount debugfs debugfs /sys/kernel/debug
+    chmod 777 /dev/binder
+    chmod 777 /dev/hwbinder
+    chmod 777 /dev/vndbinder
+    chmod 777 /dev/ion # used by OMX / libstagefright
+    chmod 755 /sys/kernel/debug
+    chmod 755 /sys/kernel/debug/sync
+    chown graphics graphics /sys/kernel/debug/sync/sw_sync
+    chmod 777 /sys/kernel/debug/sync/sw_sync
+    chmod 777 /dev/dri/card0
+    chmod 777 /dev/dri/renderD128
+    chmod 777 /dev/dri/renderD129
+    chmod 777 /dev/graphics/fb0
+    chmod 777 /sys/class/backlight/panel/brightness
+    chown graphics graphics /sys/kernel/debug/sync/info
+
+on boot
+    setprop wifi.interface wlan0
+
+    # default country code
+    setprop ro.boot.wificountrycode 00
