@@ -8,8 +8,6 @@ ARCH_ARM_HAVE_NEON := true
 
 ## binder
 TARGET_USES_64_BIT_BINDER := true
-TARGET_SUPPORTS_32_BIT_APPS := true
-TARGET_SUPPORTS_64_BIT_APPS := false
 
 ## platform
 TARGET_BOARD_PLATFORM := exynos4
@@ -42,7 +40,7 @@ BOARD_KERNEL_PAGESIZE := 2048
 
 ## kernel modules (temporary solution)
 BOARD_VENDOR_KERNEL_MODULES := \
-    $(wildcard $(KERNEL_PATH)/modules/*)
+    $(wildcard $(KERNEL_PATH)/modules/*.ko)
     
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
@@ -75,6 +73,7 @@ BOARD_HAVE_BLUETOOTH := false
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_HOSTAPD_DRIVER := NL80211
+WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 
 ## SELinux
 BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
@@ -105,3 +104,6 @@ ifeq ($(HOST_OS),linux)
 endif
 
 BOARD_USES_GRALLOC_HANDLE := true
+
+## build
+BUILD_BROKEN_USES_BUILD_HOST_STATIC_LIBRARY := true

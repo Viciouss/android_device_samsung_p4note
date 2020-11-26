@@ -11,4 +11,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.hwcomposer=drm \
     hwc.drm.device=/dev/dri/card1 \
     gralloc.gbm.device=/dev/dri/card0 \
-    vendor.hwc.drm.use_overlay_planes=1 \
+    vendor.hwc.drm.use_overlay_planes=0 \

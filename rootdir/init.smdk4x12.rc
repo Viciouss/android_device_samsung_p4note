@@ -10,17 +10,23 @@ import /vendor/etc/init/hw/init.wifi.rc
 # early-boot, boot
 
 on early-init
-    class_start console
+    mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
+    mkdir /dev/input
 
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
 
     exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
         /vendor/lib/modules atmel_mxt_ts.ko bfusb.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko btintel.ko btrtl.ko btsdio.ko btusb.ko cfg80211.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko mac80211.ko rfcomm.ko rfkill-gpio.ko rfkill.ko
 
-    setprop ro.hardware.audio.primary smdk4x12
+    class_start console
+
 on fs
     # non early mounts
-    mount_all /fstab.${ro.hardware}
+    mount_all /vendor/etc/fstab.${ro.hardware} --late
+    setprop ro.crypto.fuse_sdcard false
+
+on post-fs
+    setrlimit 8 67108864 67108864
 
 on post-fs-data
     # Set indication (checked by vold) that we have finished this action
@@ -38,23 +44,6 @@ on zygote-start
     #Create directories for wifihal services
     mkdir /dev/socket/wifihal 0770 wifi wifi
     chmod 2770 /dev/socket/wifihal
-
-on early-boot
-    mount debugfs debugfs /sys/kernel/debug
-    chmod 777 /dev/binder
-    chmod 777 /dev/hwbinder
-    chmod 777 /dev/vndbinder
-    chmod 777 /dev/ion # used by OMX / libstagefright
-    chmod 755 /sys/kernel/debug
-    chmod 755 /sys/kernel/debug/sync
-    chown graphics graphics /sys/kernel/debug/sync/sw_sync
-    chmod 777 /sys/kernel/debug/sync/sw_sync
-    chmod 777 /dev/dri/card0
-    chmod 777 /dev/dri/renderD128
-    chmod 777 /dev/dri/renderD129
-    chmod 777 /dev/graphics/fb0
-    chmod 777 /sys/class/backlight/panel/brightness
-    chown graphics graphics /sys/kernel/debug/sync/info
 
 on boot
     setprop wifi.interface wlan0
