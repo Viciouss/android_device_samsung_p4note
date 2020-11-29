@@ -16,7 +16,7 @@ on early-init
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
 
     exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
-        /vendor/lib/modules atmel_mxt_ts.ko bfusb.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko btintel.ko btrtl.ko btsdio.ko btusb.ko cfg80211.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko mac80211.ko rfcomm.ko rfkill-gpio.ko rfkill.ko
+        /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko
 
     class_start console
 
