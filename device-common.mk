@@ -126,6 +126,7 @@ PRODUCT_PACKAGES += \
 # local includes
 # $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/audio/audio.mk)
+$(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/mesa.mk)
 $(call inherit-product,$(LOCAL_PATH)/touchscreen/touch.mk)
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
