@@ -18,8 +18,6 @@ on early-init
     exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
         /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko
 
-    class_start console
-
 on fs
     # non early mounts
     mount_all /vendor/etc/fstab.${ro.hardware} --late
