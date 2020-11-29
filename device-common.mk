@@ -56,7 +56,7 @@ PRODUCT_COPY_FILES += $(LOCAL_KERNEL):$(PRODUCT_OUT)/kernel
 
 ## file system
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.smdk4x12:root/fstab.smdk4x12 \
+    $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_ROOT)/fstab.smdk4x12 \
     $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.smdk4x12 \
 
 ## display setting
@@ -65,23 +65,6 @@ TARGET_SCREEN_WIDTH := 720
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=160
-
-## audio
-PRODUCT_PACKAGES += \
-    audio.primary.smdk4x12 \
-    audio.r_submix.default \
-    audio.usb.default \
-    tinyplay \
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
-    frameworks/av/media/libeffects/data/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
-    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
-    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
-    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
     
 ## gatekeeper
 PRODUCT_PACKAGES += \
@@ -103,11 +86,14 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.device_admin.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.device_admin.xml
 
 ## media
+PRODUCT_PACKAGES += \
+    android.hardware.media.c2@1.0-service-v4l2 \
+    android.hardware.media.omx@1.0-service \
+
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
-    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
 
 ## overlay
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay-common \
@@ -139,11 +125,11 @@ PRODUCT_PACKAGES += \
 
 # local includes
 # $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
-$(call inherit-product,$(LOCAL_PATH)/treble.mk)
+$(call inherit-product,$(LOCAL_PATH)/audio/audio.mk)
 $(call inherit-product,$(LOCAL_PATH)/mesa.mk)
-$(call inherit-product,$(LOCAL_PATH)/temporary/temporary.mk)
-$(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
 $(call inherit-product,$(LOCAL_PATH)/touchscreen/touch.mk)
+$(call inherit-product,$(LOCAL_PATH)/treble.mk)
+$(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
 
 # hardware
 # $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)

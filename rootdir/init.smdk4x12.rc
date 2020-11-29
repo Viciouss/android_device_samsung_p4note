@@ -46,6 +46,8 @@ on zygote-start
     chmod 2770 /dev/socket/wifihal
 
 on boot
+
+    setprop ro.hardware.audio.primary n8000
     setprop wifi.interface wlan0
 
     # default country code

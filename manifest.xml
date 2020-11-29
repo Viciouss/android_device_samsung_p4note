@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <manifest version="1.0" type="device" target-level="2">
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.audio</name>
         <transport>hwbinder</transport>
         <version>6.0</version>
@@ -10,7 +10,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.audio.effect</name>
         <transport>hwbinder</transport>
         <version>6.0</version>
@@ -19,7 +19,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.graphics.mapper</name>
         <transport arch="32+64">passthrough</transport>
         <version>2.1</version>
@@ -28,7 +28,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.graphics.allocator</name>
         <transport>hwbinder</transport>
         <version>2.0</version>
@@ -37,7 +37,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.keymaster</name>
         <transport>hwbinder</transport>
         <version>3.0</version>
@@ -46,7 +46,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.graphics.composer</name>
         <transport>hwbinder</transport>
         <version>2.1</version>
@@ -55,7 +55,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.drm</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -68,7 +68,16 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
+        <name>android.hardware.media.c2</name>
+        <transport>hwbinder</transport>
+        <version>1.1</version>
+        <interface>
+            <name>IComponentStore</name>
+            <instance>software</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.media.omx</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -81,7 +90,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal>
+    <hal format="hidl">
         <name>android.hardware.memtrack</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
