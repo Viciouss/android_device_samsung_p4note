@@ -84,6 +84,12 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_video.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_c2_audio.xml \
+    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
+
+# Vendor seccomp policy files:
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/mediaswcodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaswcodec.policy \
+    $(LOCAL_PATH)/configs/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
 
 ## overlay
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay-common \
@@ -118,6 +124,7 @@ PRODUCT_PACKAGES += \
 $(call inherit-product,$(LOCAL_PATH)/audio/audio.mk)
 $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/mesa.mk)
+$(call inherit-product,$(LOCAL_PATH)/sensors/sensors.mk)
 $(call inherit-product,$(LOCAL_PATH)/touchscreen/touch.mk)
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
 $(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
