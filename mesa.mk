@@ -9,6 +9,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072 \
     ro.hardware.gralloc=gbm \
     ro.hardware.hwcomposer=drm \
-    hwc.drm.device=/dev/dri/card1 \
-    gralloc.gbm.device=/dev/dri/card0 \
-    vendor.hwc.drm.use_overlay_planes=0 \
+
