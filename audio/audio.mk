@@ -2,6 +2,7 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@6.0-impl \
     android.hardware.audio.service \
     android.hardware.audio.effect@6.0-impl \
+    android.hardware.soundtrigger@2.2-impl \
 
 # HAL for handling audio frames
 PRODUCT_PACKAGES += audio.primary.$(TARGET_PRODUCT)
@@ -19,9 +20,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     audio.usb.default \
     audio.r_submix.default \
-    tinyplay
-
-# $(LOCAL_PATH)/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml \
+    tinyplay \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio.n8000.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio.n8000.xml \
