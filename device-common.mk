@@ -22,7 +22,7 @@ PRODUCT_PACKAGES += \
 ## general
 
 LOCAL_PATH := device/samsung/p4note
-KERNEL_PATH := kernel/samsung/n80xx
+KERNEL_PATH := kernel/samsung/p4note
 
 PRODUCT_MANUFACTURER := samsung
 PRODUCT_BRAND := android
