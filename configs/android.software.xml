@@ -14,6 +14,7 @@
      limitations under the License.
 -->
 <permissions>
+    <feature name="android.software.cts" />
     <feature name="android.software.app_widgets" />
     <feature name="android.software.voice_recognizers" />
     <feature name="android.software.backup" />
@@ -21,6 +22,5 @@
     <feature name="android.software.input_methods" />
     <feature name="android.software.print" />
     <feature name="android.software.autofill" />
-    <feature name="android.software.cant_save_state" />
     <feature name="android.software.device_admin" />
 </permissions>
