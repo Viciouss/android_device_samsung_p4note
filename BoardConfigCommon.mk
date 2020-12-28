@@ -33,6 +33,9 @@ TARGET_COPY_OUT_VENDOR := vendor
 ## kernel config
 TARGET_NO_KERNEL := false 
 
+KERNEL_PATH := kernel/samsung/p4note
+TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/zImage-dtb
+
 BOARD_KERNEL_BASE := 0x40000000
 # we need to set the cmd line in the kernel for now
 # BOARD_KERNEL_CMDLINE := androidboot.hardware=smdk4x12 androidboot.selinux=permissive printk.devkmsg=on enforcing=0

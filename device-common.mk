@@ -22,10 +22,10 @@ PRODUCT_PACKAGES += \
 ## general
 
 LOCAL_PATH := device/samsung/p4note
-KERNEL_PATH := kernel/samsung/p4note
+
 
 PRODUCT_MANUFACTURER := samsung
-PRODUCT_BRAND := android
+PRODUCT_BRAND := samsung
 PRODUCT_PLATFORM := smdk4x12
 
 PRODUCT_CHARACTERISTICS := tablet
@@ -44,15 +44,6 @@ PRODUCT_RUNTIMES := runtime_libart_default
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := 160dpi
 PRODUCT_AAPT_PREBUILT_DPI := xhdpi
-
-## kernel
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-    LOCAL_KERNEL := $(KERNEL_PATH)/zImage-dtb
-else
-    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
-PRODUCT_COPY_FILES += $(LOCAL_KERNEL):$(PRODUCT_OUT)/kernel
 
 ## file system
 PRODUCT_COPY_FILES += \
@@ -136,3 +127,5 @@ $(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
 
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
+
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
