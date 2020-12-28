@@ -10,3 +10,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.gralloc=gbm \
     ro.hardware.hwcomposer=drm \
 
+# use GPU composer because of screen flickering
+PRODUCT_PROPERTY_OVERRIDES += vendor.hwc.backend_override=client
