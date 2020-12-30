@@ -55,10 +55,6 @@ TARGET_SCREEN_WIDTH := 720
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=160
-    
-## gatekeeper
-PRODUCT_PACKAGES += \
-	android.hardware.gatekeeper@1.0-service.software \
 
 ## init
 PRODUCT_COPY_FILES += \
