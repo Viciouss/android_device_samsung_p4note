@@ -46,7 +46,7 @@ PRODUCT_AAPT_PREBUILT_DPI := xhdpi
 
 ## file system
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_ROOT)/fstab.smdk4x12 \
+    $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_RAMDISK)/fstab.smdk4x12 \
     $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.smdk4x12 \
 
 ## display setting
@@ -91,7 +91,6 @@ PRODUCT_PACKAGES += \
 	vndk_package \
 
 # local includes
-# $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/audio/audio.mk)
 $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
 $(call inherit-product,$(LOCAL_PATH)/media/media.mk)
