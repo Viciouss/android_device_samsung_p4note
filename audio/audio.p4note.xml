@@ -1,5 +1,5 @@
 <audiohal>
-        <mixer name="p4note">
+        <mixer card="0">
                 <init>
                         <!-- AIF1->DAC1 -->
                         <ctl name="DAC1 Switch" val="1"/>
