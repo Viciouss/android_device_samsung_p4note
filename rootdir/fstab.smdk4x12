@@ -3,7 +3,7 @@
 # The filesystem that contains the filesystem checker binary (typically /system) cannot
 # specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
 
-/dev/block/platform/soc/12550000.mmc/by-name/EFS                /efs            ext4            ro,noatime,nosuid,nodev            wait
+# /dev/block/platform/soc/12550000.mmc/by-name/EFS                /efs            ext4            ro,noatime,nosuid,nodev            wait
 /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM             /               ext4            ro,noatime                         wait
 /dev/block/platform/soc/12550000.mmc/by-name/CACHE              /vendor         ext4            ro,noatime                         wait,first_stage_mount
 /dev/block/platform/soc/12550000.mmc/by-name/USERDATA           /data           ext4            rw,noatime,nosuid,nodev            wait,check,first_stage_mount
@@ -16,15 +16,15 @@
 /devices/platform/soc/12530000.sdhci/mmc_host/mmc*              auto            auto            defaults                           voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/platform/soc/12480000.hsotg*                           auto            auto            defaults                           voldmanaged=usb:auto
 
-# BOTA0     -> /dev/mmcblk2p1
-# BOTA1     -> /dev/mmcblk2p2
-# EFS       -> /dev/mmcblk2p3
-# PARAM     -> /dev/mmcblk2p4
-# BOOT      -> /dev/mmcblk2p5
-# RECOVERY  -> /dev/mmcblk2p6
-# RADIO     -> /dev/mmcblk2p7
-# CACHE     -> /dev/mmcblk2p8 
-# SYSTEM    -> /dev/mmcblk2p9
-# HIDDEN    -> /dev/mmcblk2p10
-# OTA       -> /dev/mmcblk2p11
-# USERDATA  -> /dev/mmcblk2p12
+# BOTA0     -> /dev/mmcblk2p1  (    4 MB)
+# BOTA1     -> /dev/mmcblk2p2  (    4 MB)
+# EFS       -> /dev/mmcblk2p3  (   20 MB)
+# PARAM     -> /dev/mmcblk2p4  (    8 MB)
+# BOOT      -> /dev/mmcblk2p5  (    8 MB)
+# RECOVERY  -> /dev/mmcblk2p6  (    8 MB)
+# RADIO     -> /dev/mmcblk2p7  (   32 MB)
+# CACHE     -> /dev/mmcblk2p8  (  800 MB)
+# SYSTEM    -> /dev/mmcblk2p9  ( 1400 MB)
+# HIDDEN    -> /dev/mmcblk2p10 (  500 MB)
+# OTA       -> /dev/mmcblk2p11 (    8 MB)
+# USERDATA  -> /dev/mmcblk2p12 (12228 MB)
