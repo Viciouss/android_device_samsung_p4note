@@ -5,7 +5,8 @@ PRODUCT_PACKAGES += \
     android.hardware.soundtrigger@2.2-impl \
 
 # HAL for handling audio frames
-PRODUCT_PACKAGES += audio.primary.$(TARGET_PRODUCT)
+PRODUCT_PACKAGES += \
+    audio.primary.n8000
 
 # We do need debug utilities on the target to enable users to be able to give
 # certain information without needing to recompile an image. In addition it
@@ -23,7 +24,7 @@ PRODUCT_PACKAGES += \
     tinyplay \
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio.n8000.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio.n8000.xml \
+    $(LOCAL_PATH)/audio.p4note.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio.n8000.xml \
     $(LOCAL_PATH)/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     frameworks/av/media/libeffects/data/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \

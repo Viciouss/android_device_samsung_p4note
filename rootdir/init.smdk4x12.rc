@@ -18,6 +18,8 @@ on early-init
     exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
         /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko
 
+    setprop ro.hardware.audio.primary n8000
+
 on fs
     # non early mounts
     mount_all /vendor/etc/fstab.${ro.hardware} --late
@@ -45,7 +47,6 @@ on zygote-start
 
 on boot
 
-    setprop ro.hardware.audio.primary n8000
     setprop wifi.interface wlan0
 
     # default country code
