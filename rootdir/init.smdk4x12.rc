@@ -29,6 +29,7 @@ on post-fs
     setrlimit 8 67108864 67108864
 
 on post-fs-data
+    setprop init.svc.console stopped
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
 
