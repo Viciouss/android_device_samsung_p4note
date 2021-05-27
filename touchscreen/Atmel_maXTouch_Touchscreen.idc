@@ -7,6 +7,8 @@
 # Note that these parameters are specific to a particular device model.
 # Different parameters will need to be used for other devices.
 
+device.internal = 1
+
 # Basic Parameters
 touch.deviceType = touchScreen
 touch.orientationAware = 1
