@@ -14,3 +14,7 @@ on early-init
     setprop ro.iio.anglvel.name "LSM330DLC Gyroscope"
     setprop ro.iio.anglvel.vendor "ST Microelectronics"
     setprop ro.iio.anglvel.quirks "no-trig,no-event"
+
+    setprop ro.iio.illuminance.name "AL3201"
+    setprop ro.iio.illuminance.vendor "Dyna Image"
+    setprop ro.iio.illuminance.quirks "no-trig,no-event"
