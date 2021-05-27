@@ -39,7 +39,7 @@ PRODUCT_PACKAGES += \
 
 # Gatekeeper
 PRODUCT_PACKAGES += \
-	android.hardware.gatekeeper@1.0-service.software \
+    android.hardware.gatekeeper@1.0-service.software \
 
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service.basic \

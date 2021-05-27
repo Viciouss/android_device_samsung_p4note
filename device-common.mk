@@ -22,7 +22,6 @@ PRODUCT_PACKAGES += \
 
 LOCAL_PATH := device/samsung/p4note
 
-
 PRODUCT_MANUFACTURER := samsung
 PRODUCT_BRAND := samsung
 PRODUCT_PLATFORM := smdk4x12
@@ -74,10 +73,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/android.hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.xml \
     $(LOCAL_PATH)/configs/android.software.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.xml \
 
-# ADB support
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.service.adb.enable=1 \
-    persist.sys.usb.config=adb \
 
 # Use the default charger mode images
 PRODUCT_PACKAGES += \
@@ -99,9 +94,6 @@ $(call inherit-product,$(LOCAL_PATH)/sensors/sensors.mk)
 $(call inherit-product,$(LOCAL_PATH)/touchscreen/touch.mk)
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
 $(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
-
-# hardware
-# $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
 
 # framework stuff
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
