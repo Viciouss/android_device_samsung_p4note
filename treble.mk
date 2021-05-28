@@ -30,8 +30,9 @@ PRODUCT_PACKAGES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.0-service \
-    android.hardware.health@2.0-impl-default \
+    android.hardware.health@2.1-service \
+    android.hardware.health@2.1-impl-p4note \
+    android.hardware.health@2.1-impl-p4note.recovery \
 
 # Lights
 PRODUCT_PACKAGES += \
