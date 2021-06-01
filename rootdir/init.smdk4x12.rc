@@ -10,7 +10,9 @@ import /vendor/etc/init/hw/init.bluetooth.rc
 # firmware_mounts_complete
 # early-boot, boot
 
-on early-init
+on early-fs
+    start bootanim
+
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
     mkdir /dev/input
 
@@ -33,6 +35,3 @@ on post-fs-data
     setprop init.svc.console stopped
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
-
-on late-fs
-    start bootanim
