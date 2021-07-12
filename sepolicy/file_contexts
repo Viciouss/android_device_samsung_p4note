@@ -16,6 +16,7 @@
 
 /dev/block/platform/soc/12550000.mmc/by-name/BOOT                               u:object_r:boot_block_device:s0
 /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM                             u:object_r:system_block_device:s0
-/dev/block/platform/soc/12550000.mmc/by-name/CACHE                              u:object_r:system_block_device:s0
+/dev/block/platform/soc/12550000.mmc/by-name/CACHE                              u:object_r:cache_block_device:s0
+/dev/block/platform/soc/12550000.mmc/by-name/HIDDEN                             u:object_r:system_block_device:s0
 /dev/block/platform/soc/12550000.mmc/by-name/USERDATA                           u:object_r:userdata_block_device:s0
 /dev/block/platform/soc/12550000.mmc/by-name/MISC                               u:object_r:misc_block_device:s0
