@@ -43,5 +43,5 @@ PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software \
 
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic \
-    android.hardware.usb.gadget@1.1-service-p4note \
+    android.hardware.usb@1.0-service-p4note \
+    android.hardware.usb.gadget@1.1-service-p4note
