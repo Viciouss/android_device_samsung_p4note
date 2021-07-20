@@ -11,3 +11,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/mediaswcodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaswcodec.policy \
     $(LOCAL_PATH)/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/s5p-mfc.fw:$(TARGET_COPY_OUT_VENDOR)/lib/firmware/s5p-mfc.fw \
