@@ -1,11 +1,21 @@
+# Graphics
 PRODUCT_PACKAGES += \
-    gralloc.gbm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.composer@2.1-service \
+
+PRODUCT_PACKAGES += \
     hwcomposer.drm \
-	libGLES_mesa \
-    libGLES_android
+    libEGL_mesa \
+    libGLESv1_CM_mesa \
+    libGLESv2_mesa \
+    libGLES_android \
+    libgallium_dri \
+    libglapi \
+    libgbm \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.egl=mesa \
     ro.opengles.version=131072 \
-    ro.hardware.gralloc=gbm \
     ro.hardware.hwcomposer=drm \

@@ -9,10 +9,14 @@
 /vendor/lib(64)?/hw/android.hardware.graphics.mapper@2.0-impl-2.1.so            u:object_r:same_process_hal_file:s0
 /vendor/lib(64)?/libglapi.so                                                    u:object_r:same_process_hal_file:s0
 /vendor/lib(64)?/libdrm.so                                                      u:object_r:same_process_hal_file:s0
+/vendor/lib{64}?/libgbm_mesa_wrapper.so                                         u:object_r:same_process_hal_file:s0
+/vendor/lib(64)?/libgbm_mesa.so                                                 u:object_r:same_process_hal_file:s0
+/vendor/lib(64)?/dri/libgallium_dri.so                                          u:object_r:same_process_hal_file:s0
 
 /vendor/bin/hw/android\.hardware\.gatekeeper@1\.0-service\.software             u:object_r:hal_gatekeeper_default_exec:s0
 /vendor/bin/hw/android\.hardware\.lights-service\.p4note                        u:object_r:hal_light_default_exec:s0
 /vendor/bin/hw/android\.hardware\.usb\.gadget@1\.1-service                      u:object_r:hal_usb_gadget_default_exec:s0
+/vendor/bin/hw/android\.hardware\.graphics\.allocator@4\.0-service\.minigbm_gbm_mesa u:object_r:hal_graphics_allocator_default_exec:s0
 
 /dev/block/platform/soc/12550000.mmc/by-name/BOOT                               u:object_r:boot_block_device:s0
 /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM                             u:object_r:system_block_device:s0
