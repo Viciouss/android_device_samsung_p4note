@@ -78,6 +78,7 @@ static int release_wake_lock() {
             ALOGE("IWakeLock::release() call failed: %s", ret.description().c_str());
         }
         gSuspendBlocker.clear();
+        gSuspendBlocker = nullptr;
         return 0;
     }
     return -1;
