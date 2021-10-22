@@ -11,7 +11,6 @@ import /vendor/etc/init/hw/init.bluetooth.rc
 # early-boot, boot
 
 on early-fs
-    start bootanim
 
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
     mkdir /dev/input
@@ -35,6 +34,7 @@ on fs
 
 on post-fs
     setrlimit 8 67108864 67108864
+    start bootanim
 
 on post-fs-data
     setprop init.svc.console stopped
