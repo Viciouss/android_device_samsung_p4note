@@ -73,6 +73,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/android.hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.xml \
     $(LOCAL_PATH)/configs/android.software.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.xml \
 
+## permissions
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/permissions/permissions-system_ext-p4note.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/permissions-system_ext-p4note.xml \
 
 # Use the default charger mode images
 PRODUCT_PACKAGES += \
