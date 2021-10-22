@@ -24,3 +24,4 @@
 /dev/iio:device3                                       0660    system       system
 /dev/iio:device4                                       0660    system       system
 /dev/wlan                                              0666    system       system
+/dev/dma_heap/linux,cma	                               0666    system       graphics
