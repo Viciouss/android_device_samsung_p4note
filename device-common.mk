@@ -82,7 +82,7 @@ PRODUCT_PACKAGES += \
     charger_res_images \
 
 ## other properties
-PRODUCT_SHIPPING_API_LEVEL := 29
+PRODUCT_SHIPPING_API_LEVEL := 30
 
 ## treble
 PRODUCT_PACKAGES += \
