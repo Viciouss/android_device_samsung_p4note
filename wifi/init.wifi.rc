@@ -1,12 +1,38 @@
-on zygote-start
+on post-fs-data
+    mkdir /data/misc/dhcp 0775 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    chown wifi root /dev/rfkill
+
+    # give system access to wpa_supplicant.conf for backup and restore
+    mkdir /data/misc/wifi 0770 wifi wifi
+    chmod 0770 /data/misc/wifi
+    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    chown wifi root /dev/rfkill
+
     # Create the directories used by the Wireless subsystem
-    mkdir /data/vendor/wifi 0771 wifi wifi
+    mkdir /data/vendor/wifi 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
 
     #Create directories for wifihal services
     mkdir /dev/socket/wifihal 0770 wifi wifi
     chmod 2770 /dev/socket/wifihal
+
+    # for TRP/TIS
+    write /data/.psm.info 1
+    chown system root /data/.psm.info
+    chmod 0660 /data/.psm.info
+
+    # for WIFI Version
+    write /data/.wifiver.info 0
+    chown system root /data/.wifiver.info
+    chmod 0666 /data/.wifiver.info
+
+    # for WIFI MAC address
+    write /data/.mac.info 0
+    chown system root /data/.mac.info
+    chmod 0664 /data/.mac.info
 
 on boot
     setprop wifi.interface wlan0
