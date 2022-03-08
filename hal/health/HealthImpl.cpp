@@ -98,11 +98,10 @@ static int read_sysfs_int32_t(const char *path, int32_t *result) {
   const int SIZE = 16;
   char buf[SIZE];
   int ret = read_sysfs(path, buf, SIZE);
-  if (ret <= 0) {
-    return ret;
+  if (ret > 0) {
+    *result = atol(buf);
   }
-  *result = atol(buf);
-  return 0;
+  return ret;
 }
 
 Return<void> HealthImpl::getChargeCounter(getChargeCounter_cb _hidl_cb)
@@ -264,10 +263,10 @@ void HealthImpl::UpdateHealthInfo(HealthInfo* hinfo) {
   hinfo->legacy.legacy.batteryLevel = result;
   KLOG_INFO(LOG_TAG, "Battery capacity: %d\n", result);
   if (read > 0) {
-    if (result <= 2) hinfo->batteryCapacityLevel = BatteryCapacityLevel::CRITICAL;
-    else if (result <= 10) hinfo->batteryCapacityLevel = BatteryCapacityLevel::LOW;
+    if (result <= 3) hinfo->batteryCapacityLevel = BatteryCapacityLevel::CRITICAL;
+    else if (result <= 15) hinfo->batteryCapacityLevel = BatteryCapacityLevel::LOW;
     else if (result >= 99) hinfo->batteryCapacityLevel = BatteryCapacityLevel::FULL;
-    else if (result >= 90) hinfo->batteryCapacityLevel = BatteryCapacityLevel::HIGH;
+    else if (result >= 80) hinfo->batteryCapacityLevel = BatteryCapacityLevel::HIGH;
     else hinfo->batteryCapacityLevel = BatteryCapacityLevel::NORMAL;
   } else {
     hinfo->batteryCapacityLevel = BatteryCapacityLevel::UNKNOWN;
