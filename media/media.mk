@@ -14,3 +14,5 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/s5p-mfc.fw:$(TARGET_COPY_OUT_VENDOR)/lib/firmware/s5p-mfc.fw \
+
+DEVICE_MANIFEST_FILE += $(LOCAL_PATH)/manifest.xml
