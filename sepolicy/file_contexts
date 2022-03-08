@@ -17,6 +17,7 @@
 /vendor/bin/hw/android\.hardware\.lights-service\.p4note                        u:object_r:hal_light_default_exec:s0
 /vendor/bin/hw/android\.hardware\.usb\.gadget@1\.1-service                      u:object_r:hal_usb_gadget_default_exec:s0
 /vendor/bin/hw/android\.hardware\.graphics\.allocator@4\.0-service\.minigbm_gbm_mesa u:object_r:hal_graphics_allocator_default_exec:s0
+/vendor/bin/hw/android\.hardware\.media\.c2@1\.0-service-v4l2                   u:object_r:mediacodec_exec:s0
 
 /dev/block/platform/soc/12550000.mmc/by-name/BOOT                               u:object_r:boot_block_device:s0
 /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM                             u:object_r:system_block_device:s0
