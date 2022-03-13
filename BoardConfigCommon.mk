@@ -35,15 +35,18 @@ TARGET_COPY_OUT_VENDOR := vendor
 ## kernel config
 TARGET_NO_KERNEL := false 
 
-KERNEL_PATH := kernel/samsung/p4note
-TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/zImage-dtb
+TARGET_KERNEL_SOURCE := kernel/samsung/p4note
+TARGET_KERNEL_CONFIG := p4note_defconfig
+BOARD_KERNEL_IMAGE_NAME := zImage-dtb
+TARGET_PREBUILT_KERNEL := kernel/samsung/p4note_prebuilt/zImage-dtb
+TARGET_FORCE_PREBUILT_KERNEL := true
 
 BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
 
 ## kernel modules (temporary solution)
-BOARD_VENDOR_KERNEL_MODULES := \
-    $(wildcard $(KERNEL_PATH)/modules/*.ko)
+#BOARD_VENDOR_KERNEL_MODULES := \
+#    $(wildcard kernel/samsung/p4note_prebuilt/modules/*.ko)
     
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
@@ -90,7 +93,6 @@ TARGET_RECOVERY_INITRC := device/samsung/p4note/rootdir/init.recovery.rc
 
 ## vndk
 PRODUCT_FULL_TREBLE_OVERRIDE := true
-BOARD_VNDK_RUNTIME_DISABLE := true
 PRODUCT_USE_VNDK_OVERRIDE := true
 BOARD_VNDK_VERSION := current
 
@@ -102,3 +104,5 @@ ifeq ($(HOST_OS),linux)
 endif
 
 BOARD_USES_GRALLOC_HANDLE := true
+
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
