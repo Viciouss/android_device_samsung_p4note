@@ -45,8 +45,8 @@ BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
 
 ## kernel modules (temporary solution)
-#BOARD_VENDOR_KERNEL_MODULES := \
-#    $(wildcard kernel/samsung/p4note_prebuilt/modules/*.ko)
+BOARD_VENDOR_KERNEL_MODULES := \
+    $(wildcard kernel/samsung/p4note_prebuilt/modules/*.ko)
     
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100

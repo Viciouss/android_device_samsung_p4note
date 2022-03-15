@@ -1,6 +1,5 @@
 PRODUCT_PACKAGES += \
-    android.hardware.media.c2@1.0-service-v4l2 \
-    android.hardware.media.omx@1.0-service \
+    android.hardware.media.c2@1.0-service-v4l2
 
 PRODUCT_PACKAGES += \
     libv4l2_codec2_components \
@@ -20,3 +19,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/s5p-mfc.fw:$(TARGET_COPY_OUT_VENDOR)/lib/firmware/s5p-mfc.fw \
 
 DEVICE_MANIFEST_FILE += $(LOCAL_PATH)/manifest.xml
+
+# Create input surface on the framework side
+PRODUCT_VENDOR_PROPERTIES += \
+    debug.stagefright.c2inputsurface=-1 \
