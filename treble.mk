@@ -1,7 +1,6 @@
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service \
+    android.hardware.security.keymint-service \
 
 # Health
 PRODUCT_PACKAGES += \
@@ -23,3 +22,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     android.hardware.power-service.example \
+
+# Identity Credential HAL
+PRODUCT_PACKAGES += \
+    android.hardware.identity-service.example
