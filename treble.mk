@@ -1,7 +1,6 @@
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service \
+    android.hardware.security.keymint-service \
 
 # Memtrack
 PRODUCT_PACKAGES += \
@@ -37,3 +36,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service-p4note \
     android.hardware.usb.gadget@1.1-service-p4note
+
+PRODUCT_PACKAGES += \
+    android.hardware.power-service.example \
+
+# Identity Credential HAL
+PRODUCT_PACKAGES += \
+    android.hardware.identity-service.example

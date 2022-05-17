@@ -24,7 +24,7 @@ PRODUCT_PACKAGES += \
     tinyplay \
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio.p4note.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio.n8000.xml \
+    $(LOCAL_PATH)/audio.p4note.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio.${TARGET_DEVICE_RO}.xml \
     $(LOCAL_PATH)/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     frameworks/av/media/libeffects/data/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
@@ -33,3 +33,5 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml
+
+DEVICE_MANIFEST_FILE += $(LOCAL_PATH)/manifest.xml
