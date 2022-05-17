@@ -5,6 +5,7 @@ PRODUCT_RELEASE_NAME := n8010
 PRODUCT_NAME := lineage_n8010
 PRODUCT_DEVICE := n8010
 PRODUCT_MODEL := GT-N8010
+TARGET_DEVICE_RO := p4notewifi
 
 # Set build fingerprint / ID / Product Name etc.
 PRODUCT_BUILD_PROP_OVERRIDES += \
