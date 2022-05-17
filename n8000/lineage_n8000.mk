@@ -5,6 +5,7 @@ PRODUCT_RELEASE_NAME := n8000
 PRODUCT_NAME := lineage_n8000
 PRODUCT_DEVICE := n8000
 PRODUCT_MODEL := GT-N8000
+TARGET_DEVICE_RO := p4noterf
 
 # Set build fingerprint / ID / Product Name etc.
 PRODUCT_BUILD_PROP_OVERRIDES += \

@@ -5,6 +5,7 @@ PRODUCT_RELEASE_NAME := n8020
 PRODUCT_NAME := lineage_n8020
 PRODUCT_DEVICE := n8020
 PRODUCT_MODEL := GT-N8020
+TARGET_DEVICE_RO := p4notelte
 
 # Set build fingerprint / ID / Product Name etc.
 PRODUCT_BUILD_PROP_OVERRIDES += \
