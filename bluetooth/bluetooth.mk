@@ -5,8 +5,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.1-service.btlinux \
     audio.bluetooth.default \
-    android.hardware.bluetooth.audio@2.0-impl \
-    android.hardware.bluetooth.a2dp@1.0-impl \
+    android.hardware.bluetooth.audio@2.1-impl \
     audio.a2dp.default \
 
 PRODUCT_COPY_FILES += \

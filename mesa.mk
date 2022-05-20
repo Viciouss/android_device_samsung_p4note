@@ -13,9 +13,9 @@ PRODUCT_PACKAGES += \
     libGLES_android \
     libgallium_dri \
     libglapi \
-    libgbm \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.egl=mesa \
     ro.opengles.version=131072 \
     ro.hardware.hwcomposer=drm \
+    vendor.hwc.drm.use_overlay_planes=0 \
