@@ -83,6 +83,9 @@ LZMA_RAMDISK_TARGETS := recovery
 RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
+TW_EXCLUDE_NANO := true
+TW_EXCLUDE_BASH := true
+
 TW_CUSTOM_BATTERY_PATH := /sys/class/power_supply/max170xx_battery
 
 ## vndk
