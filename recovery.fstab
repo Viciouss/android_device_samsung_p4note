@@ -1,0 +1,11 @@
+
+/efs                ext4            /dev/block/platform/soc/12550000.mmc/by-name/EFS                flags=display="EFS";backup=1
+/boot               emmc            /dev/block/platform/soc/12550000.mmc/by-name/BOOT               flags=display="Boot";backup=1;
+/recovery           emmc            /dev/block/platform/soc/12550000.mmc/by-name/RECOVERY           flags=display="Recovery";backup=1
+/modem              emmc            /dev/block/platform/soc/12550000.mmc/by-name/RADIO              flags=display="Modem";backup=1
+/cache              ext4            /dev/block/platform/soc/12550000.mmc/by-name/CACHE              flags=display="Cache";backup=1
+/system             ext4            /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM             flags=display="System";backup=1
+/data               ext4            /dev/block/platform/soc/12550000.mmc/by-name/USERDATA           length=-32768    flags=backup=1
+/vendor             ext4            /dev/block/platform/soc/12550000.mmc/by-name/HIDDEN             flags=display="Vendor";backup=1
+
+/external_sdcard    auto            /dev/block/platform/soc/12530000.sdhci/by-num/p1                flags=display="Micro SDCard";storage;wipeingui;removable
