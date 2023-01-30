@@ -1,5 +1,9 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
+PRODUCT_PROPERTY_OVERRIDE += \
+    ro.secure=0 \
+    ro.debuggable=1 \
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.ringtone=Ring_Synth_04.ogg \
     ro.com.android.dataroaming=true
