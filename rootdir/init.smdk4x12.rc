@@ -17,10 +17,11 @@ on early-fs
 
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
 
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
-        /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko \
-        cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko s5p-jpeg.ko s5p-mfc.ko \
-        v4l2-mem2mem.ko videobuf2-common.ko videobuf2-dma-contig.ko videobuf2-memops.ko videobuf2-v4l2.ko
+    # Load the modules listed in modules.load, which is generated from
+    # BOARD_VENDOR_KERNEL_MODULES_LOAD in BoardConfigCommon.mk. Dependencies
+    # are resolved from modules.dep, so order within the file does not matter.
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -d /vendor/lib/modules \
+        --all=/vendor/lib/modules/modules.load
 
     setprop ro.hardware.audio.primary n8000
 
