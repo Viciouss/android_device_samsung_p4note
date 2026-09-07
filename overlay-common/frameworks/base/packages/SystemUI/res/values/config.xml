@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 
+        Disable the privacy dot for increased performance, it takes up fimd planes which decreases
+        composition performance on an already constrained device.
+     -->
+    <bool name="config_enablePrivacyDot">false</bool>
+
+</resources>
