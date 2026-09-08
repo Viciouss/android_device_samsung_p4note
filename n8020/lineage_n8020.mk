@@ -18,3 +18,6 @@ BUILD_FINGERPRINT := samsung/p4noteltexx/p4notelte:4.4.2/KOT49H/N8020XXUDOL1:use
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.product.name=p4noteltexx \
     ro.vendor.product.device=p4notelte
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/../wifi/brcmfmac4334-sdio-n8020.txt:$(TARGET_COPY_OUT_VENDOR)/lib/firmware/brcm/brcmfmac4334-sdio.txt

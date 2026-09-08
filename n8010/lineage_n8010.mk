@@ -18,3 +18,6 @@ BUILD_FINGERPRINT := samsung/p4notewifiue/p4notewifi:4.1.2/JZO54K/N8013UEUCOI1:u
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.product.name=p4notewifiue \
     ro.vendor.product.device=p4notewifi
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/../wifi/brcmfmac4334-sdio-n8010.txt:$(TARGET_COPY_OUT_VENDOR)/lib/firmware/brcm/brcmfmac4334-sdio.txt
