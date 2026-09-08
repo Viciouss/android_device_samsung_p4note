@@ -1,9 +1,10 @@
-/dev/ion	                                       0666    system       graphics
-/dev/graphics/fb0	                               0666    system       graphics
-/dev/dri/card0                                         0660    system       graphics
-/dev/dri/renderD128                                    0666    system       graphics
-/dev/dri/card1                                         0660    system       graphics
-/dev/dri/renderD129                                    0666    system       graphics
+subsystem dma_heap
+   devname uevent_devpath
+   dirname /dev/dma_heap
+
+/dev/ion                                               0666    system       graphics
+/dev/graphics/*                                        0660    root         graphics
+/dev/dri/*                                             0666    root         graphics
 /dev/pvr_sync                                          0666    system       graphics
 /dev/sw_sync                                           0666    system       graphics
 /dev/composer                                          0660    system       graphics
@@ -18,10 +19,7 @@
 /dev/block/platform/soc/12550000.mmc/by-name/USERDATA  0600    system       system
 /dev/rfkill                                            0660    bluetooth    net_bt
 /dev/ion                                               0664    system       system
-/dev/iio:device0                                       0660    system       system
-/dev/iio:device1                                       0660    system       system
-/dev/iio:device2                                       0660    system       system
-/dev/iio:device3                                       0660    system       system
-/dev/iio:device4                                       0660    system       system
+/dev/iio:device*                                       0660    system       system
 /dev/wlan                                              0666    system       system
 /dev/dma_heap/linux,cma	                               0666    system       graphics
+/dev/dma_heap/system                                   0666    system       system
