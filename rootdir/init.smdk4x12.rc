@@ -15,6 +15,13 @@ on early-fs
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
     mkdir /dev/input
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
+
+    # Load the modules listed in modules.load, which is generated from
+    # BOARD_VENDOR_KERNEL_MODULES_LOAD in BoardConfigCommon.mk. Dependencies
+    # are resolved from modules.dep, so order within the file does not matter.
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -d /vendor/lib/modules \
+        --all=/vendor/lib/modules/modules.load
+
     setprop ro.hardware.audio.primary n8000
 
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance

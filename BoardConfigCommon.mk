@@ -33,21 +33,15 @@ BOARD_USES_VENDORIMAGE := true
 TARGET_COPY_OUT_VENDOR := vendor
 
 ## kernel config
-TARGET_NO_KERNEL := false 
+TARGET_NO_KERNEL := false
 
 TARGET_KERNEL_SOURCE := kernel/samsung/p4note
-TARGET_KERNEL_CONFIG := p4note_defconfig
+TARGET_KERNEL_CONFIG := p4note_android_defconfig
 BOARD_KERNEL_IMAGE_NAME := zImage-dtb
-TARGET_PREBUILT_KERNEL := kernel/samsung/p4note_prebuilt/zImage-dtb
-TARGET_FORCE_PREBUILT_KERNEL := true
 
 BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
 
-## kernel modules (temporary solution)
-BOARD_VENDOR_KERNEL_MODULES := \
-    $(wildcard kernel/samsung/p4note_prebuilt/modules/*.ko)
-    
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
 BOARD_KERNEL_OFFSET			:= 0x00008000
