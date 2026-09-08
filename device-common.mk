@@ -85,6 +85,17 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     charger_res_images \
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.heapstartsize=1m \
+    dalvik.vm.heapgrowthlimit=48m \
+    dalvik.vm.heapsize=128m \
+    dalvik.vm.heaptargetutilization=0.75 \
+    dalvik.vm.heapminfree=512k \
+    dalvik.vm.heapmaxfree=2m \
+    dalvik.vm.usejit=false \
+
+PRODUCT_PROPERTY_OVERRIDES += ro.config.low_ram=true
+
 ## other properties
 PRODUCT_SHIPPING_API_LEVEL := 30
 

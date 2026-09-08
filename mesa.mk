@@ -6,6 +6,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.4-service \
 
 PRODUCT_PACKAGES += \
+    libgbm_mesa_wrapper \
     hwcomposer.drm \
     libEGL_mesa \
     libGLESv1_CM_mesa \

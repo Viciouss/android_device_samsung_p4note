@@ -14,15 +14,13 @@ on early-fs
 
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
     mkdir /dev/input
-
     write /sys/module/firmware_class/parameters/path /vendor/lib/firmware
-
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
-        /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko \
-        cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko s5p-jpeg.ko s5p-mfc.ko \
-        v4l2-mem2mem.ko videobuf2-common.ko videobuf2-dma-contig.ko videobuf2-memops.ko videobuf2-v4l2.ko
-
     setprop ro.hardware.audio.primary n8000
+
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor performance
 
 on fs
     # non early mounts
@@ -36,7 +34,111 @@ on post-fs
     setrlimit 8 67108864 67108864
     start bootanim
 
+    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
+        /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko \
+        cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko s5p-jpeg.ko s5p-mfc.ko \
+        v4l2-mem2mem.ko videobuf2-common.ko videobuf2-dma-contig.ko videobuf2-memops.ko videobuf2-v4l2.ko
+
 on post-fs-data
     setprop init.svc.console stopped
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
+
+on boot
+    write /proc/sys/vm/page-cluster 0
+    write /proc/sys/vm/extra_free_kbytes 32768
+
+    # based on https://github.com/tytydraco/ktweak
+
+    setprop performance.sched.period 4000000
+    setprop performance.sched.tasks 8
+    setprop performance.sched.min.granularity 500000
+    setprop performance.sched.wakeup.granularity 2000000
+    setprop performance.sched.rate_limit_us 4000
+
+    # Limit max perf event processing time to this much CPU usage
+    write /proc/sys/kernel/perf_cpu_time_max_percent 5
+
+    # Group tasks for less stutter but less throughput
+    write /proc/sys/kernel/sched_autogroup_enabled 1
+
+    # Execute child process before parent after fork
+    write /proc/sys/kernel/sched_child_runs_first 1
+
+    # Preliminary requirement for the following values
+    write /proc/sys/kernel/sched_tunable_scaling 0
+
+    # Reduce the maximum scheduling period for lower latency
+    write /proc/sys/kernel/sched_latency_ns ${performance.sched.period}
+
+    # Schedule this ratio of tasks in the guarenteed sched period
+    write /proc/sys/kernel/sched_min_granularity_ns ${performance.sched.min.granularity}
+
+    # Require preeptive tasks to surpass half of a sched period in vmruntime
+    write /proc/sys/kernel/sched_wakeup_granularity_ns ${performance.sched.wakeup.granularity}
+
+    # Reduce the frequency of task migrations
+    write /proc/sys/kernel/sched_migration_cost_ns 5000000
+
+    # Improve real time latencies by reducing the scheduler migration time
+    write /proc/sys/kernel/sched_nr_migrate 32
+
+    # Disable scheduler statistics to reduce overhead
+    write /proc/sys/kernel/sched_schedstats 0
+
+    # Disable unnecessary printk logging
+    write /proc/sys/kernel/printk_devkmsg off
+
+    # Start non-blocking writeback later
+    write /proc/sys/vm/dirty_background_ratio 10
+
+    # Start blocking writeback later
+    write /proc/sys/vm/dirty_ratio 30
+
+    # Require dirty memory to stay in memory for longer
+    write /proc/sys/vm/dirty_expire_centisecs 3000
+
+    # Run the dirty memory flusher threads less often
+    write /proc/sys/vm/dirty_writeback_centisecs 3000
+
+    # Disable read-ahead for swap devices
+    write /proc/sys/vm/page-cluster 0
+
+    # Update /proc/stat less often to reduce jitter
+    write /proc/sys/vm/stat_interval 10
+
+    # Swap to the swap device at a fair rate
+    write /proc/sys/vm/swappiness 100
+
+    # Fairly prioritize page cache and file structures
+    write /proc/sys/vm/vfs_cache_pressure 100
+
+    # Enable Explicit Congestion Control
+    write /proc/sys/net/ipv4/tcp_ecn 1
+
+    # Enable fast socket open for receiver and sender
+    write /proc/sys/net/ipv4/tcp_fastopen 3
+
+    # Disable SYN cookies
+    write /proc/sys/net/ipv4/tcp_syncookies 0
+
+    # Consider scheduling tasks that are eager to run
+    write /sys/kernel/debug/sched_features NEXT_BUDDY
+
+    # Schedule tasks on their origin CPU if possible
+    write /sys/kernel/debug/sched_features TTWU_QUEUE
+
+    # We are not concerned with prioritizing latency
+    write /dev/stune/top-app/schedtune.prefer_idle 0
+
+    # Mark top-app as boosted, find high-performing CPUs
+    write /dev/stune/top-app/schedtune.boost 1
+
+    # Loop over each CPU in the system
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor schedutil
+
+    # Apply governor specific tunables for schedutil
+    write /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us ${performance.sched.rate_limit_us}
