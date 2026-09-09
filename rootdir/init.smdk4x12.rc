@@ -48,6 +48,18 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
 
+# FIXME: run the serial console as root
+service console /system/bin/sh
+    class core
+    console
+    disabled
+    user root
+    group root log readproc
+    seclabel u:r:shell:s0
+    setenv HOSTNAME console
+    shutdown critical
+    override
+
 on boot
     write /proc/sys/vm/page-cluster 0
     write /proc/sys/vm/extra_free_kbytes 32768
