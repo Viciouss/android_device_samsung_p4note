@@ -18,6 +18,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072 \
     ro.hardware.hwcomposer=drm \
     vendor.hwc.drm.use_overlay_planes=1 \
+    vendor.hwc.drm.use_cursor_plane=1 \
     vendor.hwc.drm.scale_with_gpu=1 \
     debug.sf.latch_unsignaled=1 \
     debug.sf.use_phase_offsets_as_durations=1 \
