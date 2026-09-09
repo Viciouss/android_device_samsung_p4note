@@ -1,22 +1,20 @@
 # Graphics
-PRODUCT_PACKAGES += \
-    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
-    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
-    android.hardware.graphics.composer@2.4-impl \
-    android.hardware.graphics.composer@2.4-service \
+PRODUCT_SOONG_NAMESPACES += external/mesa3d
 
 PRODUCT_PACKAGES += \
-    libgbm_mesa_wrapper \
+    android.hardware.graphics.allocator@4.0-service.minigbm \
+    android.hardware.graphics.mapper@4.0-impl.minigbm \
+    android.hardware.graphics.composer@2.4-impl \
+    android.hardware.graphics.composer@2.4-service \
     hwcomposer.drm \
-    libEGL_mesa \
-    libGLESv1_CM_mesa \
-    libGLESv2_mesa \
-    libGLES_android \
-    libgallium_dri \
-    libglapi \
+    libGLES_mesa \
+    gallium_dri \
+    libgbm_mesa \
+    libglapi
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.egl=mesa \
+    drm.gpu.vendor_name=lima \
     ro.opengles.version=131072 \
     ro.hardware.hwcomposer=drm \
     vendor.hwc.drm.use_overlay_planes=0 \
