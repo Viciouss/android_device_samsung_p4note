@@ -36,9 +36,6 @@ DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 
 AB_OTA_UPDATER := false
 
-# Build and run only ART
-PRODUCT_RUNTIMES := runtime_libart_default
-
 #PRODUCT_PROPERTY_OVERRIDES +=
 #    ro.config.low_ram=true
 
