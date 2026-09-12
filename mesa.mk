@@ -16,6 +16,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072 \
     ro.hardware.hwcomposer=drm \
     ro.vendor.hwc.use_overlay_planes=1 \
+    vendor.hwc.drm.solid_color_planes=1 \
     vendor.hwc.drm.min_plane_width=128 \
     vendor.hwc.drm.scale_with_gpu=1 \
     debug.sf.latch_unsignaled=1 \
