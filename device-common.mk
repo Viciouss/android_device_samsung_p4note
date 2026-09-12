@@ -82,14 +82,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     charger_res_images \
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.heapstartsize=1m \
-    dalvik.vm.heapgrowthlimit=48m \
-    dalvik.vm.heapsize=128m \
-    dalvik.vm.heaptargetutilization=0.75 \
-    dalvik.vm.heapminfree=512k \
-    dalvik.vm.heapmaxfree=2m \
-    dalvik.vm.usejit=false \
+## performance tuning
+# keep dex2oat in check so it doesn't stall the whole system
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    dalvik.vm.dex2oat-threads=1 \
+    dalvik.vm.image-dex2oat-threads=1
 
 PRODUCT_PROPERTY_OVERRIDES += ro.config.low_ram=true
 
