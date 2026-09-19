@@ -13,7 +13,7 @@ $(P4NOTE_MODULES_LOAD): $(PRODUCT_OUT)/kernel
 	@echo "Generating vendor modules.load"
 	$(hide) sed -e 's|:.*||' -e 's|^.*/||' $(dir $@)modules.dep > $@
 
-$(PRODUCT_OUT)/vendor.img: $(P4NOTE_MODULES_LOAD)
+ALL_DEFAULT_INSTALLED_MODULES += $(P4NOTE_MODULES_LOAD)
 
 endif
 endif
