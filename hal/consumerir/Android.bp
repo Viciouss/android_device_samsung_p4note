@@ -1,0 +1,14 @@
+cc_binary {
+    name: "android.hardware.ir-service.p4note",
+    relative_install_path: "hw",
+    init_rc: ["consumerir.rc"],
+    vintf_fragments: ["consumerir.xml"],
+    vendor: true,
+    shared_libs: [
+        "libbase",
+        "libbinder_ndk",
+        "android.hardware.ir-V1-ndk",
+    ],
+
+    srcs: ["consumerir.cpp"],
+}

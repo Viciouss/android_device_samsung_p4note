@@ -17,6 +17,10 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl-p4note \
     android.hardware.health@2.1-impl-p4note.recovery \
 
+# ConsumerIr
+PRODUCT_PACKAGES += \
+    android.hardware.ir-service.p4note \
+
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.lights-service.p4note \

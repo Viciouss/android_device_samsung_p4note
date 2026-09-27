@@ -1,0 +1,8 @@
+service vendor.ir-default /vendor/bin/hw/android.hardware.ir-service.p4note
+    class hal
+    user system
+    group system
+
+on boot
+    chown system system /sys/class/sec/sec_ir/ir_send
+    chmod 0660 /sys/class/sec/sec_ir/ir_send

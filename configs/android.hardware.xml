@@ -15,7 +15,7 @@
     <feature name="android.hardware.audio.output" />
     <feature name="android.hardware.bluetooth" />
     <feature name="android.hardware.bluetooth_le" />
-    <!--feature name="android.hardware.consumerir" /-->
+    <feature name="android.hardware.consumerir" />
     <!--feature name="android.hardware.hdmi.cec" /-->
     <feature name="android.hardware.location" />
     <feature name="android.hardware.location.network" />
