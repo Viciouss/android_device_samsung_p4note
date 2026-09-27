@@ -1,0 +1,14 @@
+cc_binary {
+    name: "android.hardware.vibrator-service.p4note",
+    relative_install_path: "hw",
+    init_rc: ["vibrator.rc"],
+    vintf_fragments: ["vibrator.xml"],
+    vendor: true,
+    shared_libs: [
+        "libbase",
+        "libbinder_ndk",
+        "android.hardware.vibrator-V2-ndk",
+    ],
+
+    srcs: ["vibrator.cpp"],
+}

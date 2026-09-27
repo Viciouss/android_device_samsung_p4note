@@ -25,6 +25,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.lights-service.p4note \
 
+# Vibrator
+PRODUCT_PACKAGES += \
+    android.hardware.vibrator-service.p4note \
+
 # Gatekeeper
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software \
