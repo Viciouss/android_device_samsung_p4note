@@ -13,6 +13,9 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.gralloc=minigbm \
+    ro.hwui.texture_cache_size=36 \
+    ro.hwui.layer_cache_size=24 \
+    ro.hwui.path_cache_size=16 \
     ro.hardware.egl=mesa \
     drm.gpu.vendor_name=lima \
     ro.opengles.version=131072 \
