@@ -29,6 +29,7 @@ namespace implementation {
 
 #define CHARGER_SYSFS_PATH "/sys/class/power_supply/smb347-usb/"
 #define CHARGER_STATUS_SYSFS_PATH CHARGER_SYSFS_PATH "status"
+#define CHARGER_ONLINE_SYSFS_PATH CHARGER_SYSFS_PATH "online"
 
 #define BATTERY_SYSFS_PATH "/sys/class/power_supply/max170xx_battery/"
 #define BATTERY_CHARGE_COUNTER BATTERY_SYSFS_PATH "charge_counter"
@@ -169,35 +170,37 @@ Return<void> HealthImpl::getChargeStatus(getChargeStatus_cb _hidl_cb)
   const int SIZE = 16;
   char buf[SIZE];
   int read = read_sysfs(CHARGER_STATUS_SYSFS_PATH, buf, SIZE);
-  KLOG_INFO(LOG_TAG, "Current device state: '%s'\n", buf);
-  if (read > 0) {
-    if(std::strncmp("Charging", buf, read) == 0) {
-      // charger is plugged in, check current to see whether device is charging
-      int32_t result = 0;
-      read = read_sysfs_int32_t(BATTERY_CURRENT_NOW, &result);
-      if (read <= 0) {
-        if (result > 99) {
-          KLOG_INFO(LOG_TAG, "Device is full");
-          _hidl_cb(Result::SUCCESS, BatteryStatus::FULL);
-        } else if (result > 0) {
-          KLOG_INFO(LOG_TAG, "Device is charging");
-          _hidl_cb(Result::SUCCESS, BatteryStatus::CHARGING);
-        } else {
-          KLOG_INFO(LOG_TAG, "Device is discharging");
-          _hidl_cb(Result::SUCCESS, BatteryStatus::NOT_CHARGING);
-        }
-      } else {
-        _hidl_cb(Result::SUCCESS, BatteryStatus::UNKNOWN);
-      }
-    } else if (std::strncmp("Not Charging", buf, read) == 0) {
-      KLOG_INFO(LOG_TAG, "Device is not chargin\n");
-      _hidl_cb(Result::SUCCESS, BatteryStatus::DISCHARGING);
-    } else {
-      KLOG_INFO(LOG_TAG, "Unknown charger state");
-      _hidl_cb(Result::UNKNOWN, BatteryStatus::UNKNOWN);
-    }
-  } else {
+  if (read <= 0) {
     KLOG_INFO(LOG_TAG, "Could not read charger file at '%s'\n", CHARGER_STATUS_SYSFS_PATH);
+    _hidl_cb(Result::UNKNOWN, BatteryStatus::UNKNOWN);
+    return Void();
+  }
+
+  KLOG_INFO(LOG_TAG, "Current device state: '%s'\n", buf);
+  if (std::strcmp("Charging", buf) == 0) {
+    // charger is plugged in, check current to see whether device is charging
+    int32_t result = 0;
+    read = read_sysfs_int32_t(BATTERY_CURRENT_NOW, &result);
+    if (read <= 0) {
+      _hidl_cb(Result::SUCCESS, BatteryStatus::UNKNOWN);
+    } else if (result > 0) {
+      KLOG_INFO(LOG_TAG, "Device is charging\n");
+      _hidl_cb(Result::SUCCESS, BatteryStatus::CHARGING);
+    } else {
+      KLOG_INFO(LOG_TAG, "Device is not charging\n");
+      _hidl_cb(Result::SUCCESS, BatteryStatus::NOT_CHARGING);
+    }
+  } else if (std::strcmp("Full", buf) == 0) {
+    KLOG_INFO(LOG_TAG, "Device is full\n");
+    _hidl_cb(Result::SUCCESS, BatteryStatus::FULL);
+  } else if (std::strcmp("Not charging", buf) == 0) {
+    KLOG_INFO(LOG_TAG, "Device is not charging\n");
+    _hidl_cb(Result::SUCCESS, BatteryStatus::NOT_CHARGING);
+  } else if (std::strcmp("Discharging", buf) == 0) {
+    KLOG_INFO(LOG_TAG, "Device is discharging\n");
+    _hidl_cb(Result::SUCCESS, BatteryStatus::DISCHARGING);
+  } else {
+    KLOG_INFO(LOG_TAG, "Unknown charger state\n");
     _hidl_cb(Result::UNKNOWN, BatteryStatus::UNKNOWN);
   }
 
@@ -240,20 +243,14 @@ Return<void> HealthImpl::getHealthInfo_2_1(getHealthInfo_2_1_cb _hidl_cb)
 }
 
 void HealthImpl::UpdateHealthInfo(HealthInfo* hinfo) {
-  const int SIZE = 16;
-  char buf[SIZE];
-
   KLOG_INFO(LOG_TAG, "Called UpdateHealthInfo\n");
 
-  int read = read_sysfs(CHARGER_STATUS_SYSFS_PATH, buf, SIZE);
-  
-  if (std::strncmp("Charging", buf, read) == 0) {
-    hinfo->legacy.legacy.chargerUsbOnline = true;
-    KLOG_INFO(LOG_TAG, "Device is charging\n");
-  } else {
-    hinfo->legacy.legacy.chargerUsbOnline = false;
-    KLOG_INFO(LOG_TAG, "Device is NOT charging\n");
-  }
+  // online stays set while the charger is attached, also when it reports
+  // "Full" or "Not charging"
+  int32_t online = 0;
+  int read = read_sysfs_int32_t(CHARGER_ONLINE_SYSFS_PATH, &online);
+  hinfo->legacy.legacy.chargerUsbOnline = read > 0 && online;
+  KLOG_INFO(LOG_TAG, "Charger online: %d\n", hinfo->legacy.legacy.chargerUsbOnline);
 
   hinfo->legacy.legacy.batteryPresent = true;
   KLOG_INFO(LOG_TAG, "Battery present\n");
