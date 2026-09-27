@@ -4,6 +4,7 @@ PRODUCT_SOONG_NAMESPACES += external/mesa3d
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm \
     android.hardware.graphics.mapper@4.0-impl.minigbm \
+    gralloc.minigbm \
     android.hardware.composer.hwc3-service.drm \
     libGLES_mesa \
     gallium_dri \
@@ -11,6 +12,7 @@ PRODUCT_PACKAGES += \
     libglapi
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    ro.hardware.gralloc=minigbm \
     ro.hardware.egl=mesa \
     drm.gpu.vendor_name=lima \
     ro.opengles.version=131072 \
