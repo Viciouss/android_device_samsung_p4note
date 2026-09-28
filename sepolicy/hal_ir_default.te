@@ -1,0 +1,6 @@
+#============= hal_ir_default ==============
+# /sys/class/sec/sec_ir is a symlink into /sys/devices/virtual/sec
+allow hal_ir_default sysfs:dir search;
+allow hal_ir_default sysfs:lnk_file read;
+allow hal_ir_default sysfs_ir:dir search;
+allow hal_ir_default sysfs_ir:file rw_file_perms;

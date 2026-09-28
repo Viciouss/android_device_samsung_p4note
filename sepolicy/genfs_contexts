@@ -1,0 +1,1 @@
+genfscon sysfs /devices/virtual/sec/sec_ir u:object_r:sysfs_ir:s0

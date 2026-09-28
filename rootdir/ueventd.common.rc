@@ -8,10 +8,13 @@ subsystem dma_heap
 /dev/pvr_sync                                          0666    system       graphics
 /dev/sw_sync                                           0666    system       graphics
 /dev/composer                                          0660    system       graphics
+/dev/video*                                            0660    system       camera
 /dev/video0                                            0666    media        media
 /dev/video1                                            0666    media        media
 /dev/video2                                            0666    media        media
 /dev/video3                                            0666    media        media
+/dev/media*                                            0660    system       camera
+/dev/v4l-subdev*                                       0660    system       camera
 /dev/tee0                                              0660    system       keystore
 /dev/teepriv0                                          0660    system       keystore
 /dev/ttyUSB0                                           0666    system       system
