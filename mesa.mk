@@ -1,15 +1,15 @@
 # Graphics
-PRODUCT_SOONG_NAMESPACES += external/mesa3d
-
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm \
     android.hardware.graphics.mapper@4.0-impl.minigbm \
     gralloc.minigbm \
     android.hardware.composer.hwc3-service.drm \
-    libGLES_mesa \
-    gallium_dri \
+    libEGL_mesa \
+    libGLESv1_CM_mesa \
+    libGLESv2_mesa \
+    libgallium_dri \
     libgbm_mesa \
-    libglapi
+    dri_gbm
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.gralloc=minigbm \
