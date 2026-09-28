@@ -9,9 +9,9 @@ TARGET_DEVICE_RO := p4notewifi
 
 # Set build fingerprint / ID / Product Name etc.
 PRODUCT_BUILD_PROP_OVERRIDES += \
-		PRODUCT_NAME=p4notewifiue \
-		TARGET_DEVICE=p4notewifi \
-		PRIVATE_BUILD_DESC="p4notewifiue-user 4.1.2 JZO54K N8013UEUCOI1 release-keys"
+		DeviceProduct=p4notewifiue \
+		DeviceName=p4notewifi \
+		BuildDesc="p4notewifiue-user 4.1.2 JZO54K N8013UEUCOI1 release-keys"
 
 BUILD_FINGERPRINT := samsung/p4notewifiue/p4notewifi:4.1.2/JZO54K/N8013UEUCOI1:user/release-keys
 

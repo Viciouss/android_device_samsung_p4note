@@ -9,9 +9,9 @@ TARGET_DEVICE_RO := p4notelte
 
 # Set build fingerprint / ID / Product Name etc.
 PRODUCT_BUILD_PROP_OVERRIDES += \
-		PRODUCT_NAME=p4noteltexx \
-		TARGET_DEVICE=p4notelte \
-		PRIVATE_BUILD_DESC="p4noteltexx-user 4.4.2 KOT49H N8020XXUDOL1 release-keys"
+		DeviceProduct=p4noteltexx \
+		DeviceName=p4notelte \
+		BuildDesc="p4noteltexx-user 4.4.2 KOT49H N8020XXUDOL1 release-keys"
 
 BUILD_FINGERPRINT := samsung/p4noteltexx/p4notelte:4.4.2/KOT49H/N8020XXUDOL1:user/release-keys
 
