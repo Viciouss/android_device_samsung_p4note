@@ -6,7 +6,7 @@
 # /dev/block/platform/soc/12550000.mmc/by-name/EFS                /efs            ext4            ro,noatime,nosuid,nodev            wait
 /dev/block/platform/soc/12550000.mmc/by-name/SYSTEM             /system         ext4            ro,noatime                         wait,first_stage_mount
 /dev/block/platform/soc/12550000.mmc/by-name/HIDDEN             /vendor         ext4            ro,noatime                         wait,first_stage_mount
-/dev/block/platform/soc/12550000.mmc/by-name/CACHE              /cache          ext4            rw,noatime,nosuid,nodev,journal_checksum,journal_async_commit,data=writeback            wait
+/dev/block/platform/soc/12550000.mmc/by-name/CACHE              /system_ext     ext4            ro,noatime                         wait,first_stage_mount
 /dev/block/platform/soc/12550000.mmc/by-name/USERDATA           /data           ext4            rw,noatime,nosuid,nodev,journal_checksum,journal_async_commit,data=writeback            wait,check,first_stage_mount
 /dev/block/platform/soc/12550000.mmc/by-name/MISC               /misc           emmc            defaults                           defaults
 
@@ -27,8 +27,8 @@
 # BOOT      -> /dev/mmcblk2p5  (    8 MB)
 # RECOVERY  -> /dev/mmcblk2p6  (    8 MB)
 # RADIO     -> /dev/mmcblk2p7  (   32 MB)
-# CACHE     -> /dev/mmcblk2p8  (  800 MB)
+# CACHE     -> /dev/mmcblk2p8  (  800 MB)  used as /system_ext
 # SYSTEM    -> /dev/mmcblk2p9  ( 1400 MB)
-# HIDDEN    -> /dev/mmcblk2p10 (  500 MB)
+# HIDDEN    -> /dev/mmcblk2p10 (  500 MB)  used as /vendor
 # OTA       -> /dev/mmcblk2p11 (    8 MB)
 # USERDATA  -> /dev/mmcblk2p12 (12228 MB)
