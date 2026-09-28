@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Only carries the DeviceKeyHandler class that PhoneWindowManager loads
+     into system_server. The app itself never runs.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.lineageos.p4note.keyhandler">
+
+    <application android:label="P4noteKeyHandler" />
+</manifest>

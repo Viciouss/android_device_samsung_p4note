@@ -100,6 +100,7 @@ PRODUCT_PACKAGES += \
 # local includes
 $(call inherit-product,$(LOCAL_PATH)/audio/audio.mk)
 $(call inherit-product,$(LOCAL_PATH)/bluetooth/bluetooth.mk)
+$(call inherit-product,$(LOCAL_PATH)/keyboard/keyboard.mk)
 $(call inherit-product,$(LOCAL_PATH)/media/media.mk)
 $(call inherit-product,$(LOCAL_PATH)/mesa.mk)
 $(call inherit-product,$(LOCAL_PATH)/sensors/sensors.mk)

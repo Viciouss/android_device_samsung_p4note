@@ -1,0 +1,110 @@
+# Key layout for the 30-pin keyboard dock (p4note-kbd-dock, "sec_keyboard").
+#
+# Taken from the stock N8000 firmware (system/usr/keylayout/sec_keyboard.kl).
+# Samsung-only labels are translated to their AOSP equivalents:
+#   RECENTAPPS -> APP_SWITCH, EMAIL -> ENVELOPE, APPLICATION -> META_LEFT,
+#   VOICESEARCH -> VOICE_ASSIST, LANG -> LANGUAGE_SWITCH,
+#   QPANEL_ON_OFF -> NOTIFICATION, ALT_GR -> ALT_RIGHT.
+# APPLICATION (app drawer) maps to META_LEFT: a lone Meta press opens all
+# apps in Launcher3, while ALL_APPS sends an intent Launcher3 doesn't handle.
+# The WAKE_DROPPED flag does not exist in AOSP and is dropped.
+# Key 187 (SIP_ON_OFF, keyboard icon with up/down arrow: show/hide the
+# on-screen keyboard) has no AOSP equivalent and stays unmapped.
+
+# special keys
+key 158   BACK
+key 359   HOME
+key 61    APP_SWITCH
+key 150   EXPLORER
+key 215   ENVELOPE
+key 152   POWER
+key 224   BRIGHTNESS_DOWN
+key 225   BRIGHTNESS_UP
+key 113   VOLUME_MUTE
+key 114   VOLUME_DOWN
+key 115   VOLUME_UP
+key 207   MEDIA_PLAY_PAUSE
+key 168   MEDIA_REWIND
+key 208   MEDIA_FAST_FORWARD
+key 163   MEDIA_NEXT
+key 165   MEDIA_PREVIOUS
+key 185   META_LEFT
+key 139   MENU
+key 111   FORWARD_DEL
+key 217   SEARCH
+key 190   VOICE_ASSIST
+key 191   LANGUAGE_SWITCH
+key 192   NOTIFICATION
+
+# number row
+key 41    GRAVE
+key 2     1
+key 3     2
+key 4     3
+key 5     4
+key 6     5
+key 7     6
+key 8     7
+key 9     8
+key 10    9
+key 11    0
+key 12    MINUS
+key 13    EQUALS
+key 14    DEL
+
+# top row
+key 15    TAB
+key 16    Q
+key 17    W
+key 18    E
+key 19    R
+key 20    T
+key 21    Y
+key 22    U
+key 23    I
+key 24    O
+key 25    P
+key 26    LEFT_BRACKET
+key 27    RIGHT_BRACKET
+key 43    BACKSLASH
+
+# home row
+key 58    CAPS_LOCK
+key 30    A
+key 31    S
+key 32    D
+key 33    F
+key 34    G
+key 35    H
+key 36    J
+key 37    K
+key 38    L
+key 39    SEMICOLON
+key 40    APOSTROPHE
+key 523   POUND
+key 28    ENTER
+
+# bottom row
+key 42    SHIFT_LEFT
+key 44    Z
+key 45    X
+key 46    C
+key 47    V
+key 48    B
+key 49    N
+key 50    M
+key 51    COMMA
+key 52    PERIOD
+key 53    SLASH
+key 54    SHIFT_RIGHT
+
+# space row
+key 29    CTRL_LEFT
+key 57    SPACE
+key 100   ALT_RIGHT
+
+# cursor keys
+key 108   DPAD_DOWN
+key 103   DPAD_UP
+key 105   DPAD_LEFT
+key 106   DPAD_RIGHT
