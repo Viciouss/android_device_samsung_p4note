@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Included>
+    <Decoders>
+        <MediaCodec name="c2.v4l2.avc.decoder" type="video/avc">
+            <!-- Exynos4412 MFC 6.1: H.264 High Profile decode -->
+            <Limit name="size" min="16x16" max="1920x1088" />
+            <Limit name="alignment" value="16x16" />
+            <Limit name="block-size" value="16x16" />
+            <Limit name="block-count" range="1-8160" /> <!-- 1920x1088 in 16x16 blocks -->
+            <Limit name="blocks-per-second" range="1-244800" /> <!-- 1080p30 -->
+            <Limit name="bitrate" range="1-20000000" />
+            <Feature name="adaptive-playback" />
+        </MediaCodec>
+    </Decoders>
+</Included>
