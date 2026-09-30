@@ -1,9 +1,5 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
-PRODUCT_PROPERTY_OVERRIDE += \
-    ro.secure=0 \
-    ro.debuggable=1 \
-
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.ringtone=Ring_Synth_04.ogg \
     ro.com.android.dataroaming=true
@@ -15,7 +11,6 @@ PRODUCT_PACKAGES += \
     WallpaperPicker2 \
     Gallery2 \
     Contacts \
-    Camera2 \
     Email \
     HTMLViewer \
     Music
@@ -36,9 +31,6 @@ DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 
 AB_OTA_UPDATER := false
 
-#PRODUCT_PROPERTY_OVERRIDES +=
-#    ro.config.low_ram=true
-
 ## screen configuration
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := 160dpi
@@ -50,8 +42,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/fstab.smdk4x12:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.smdk4x12 \
 
 ## display setting
-TARGET_SCREEN_HEIGHT := 1280
-TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 800
+TARGET_SCREEN_WIDTH := 1280
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=160
@@ -88,7 +80,12 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-threads=1 \
     dalvik.vm.image-dex2oat-threads=1
 
-PRODUCT_PROPERTY_OVERRIDES += ro.config.low_ram=true
+# Not a low_ram device: keep only lmkd's low_ram tuning
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.per_app_memcg=true \
+    ro.lmk.psi_partial_stall_ms=200 \
+    ro.lmk.thrashing_limit=30 \
+    ro.lmk.thrashing_limit_decay=50
 
 ## other properties
 PRODUCT_SHIPPING_API_LEVEL := 31
@@ -110,6 +107,7 @@ $(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
 
 # framework stuff
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
+$(call inherit-product,$(SRC_TARGET_DIR)/product/large_screen_common.mk)
 
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 

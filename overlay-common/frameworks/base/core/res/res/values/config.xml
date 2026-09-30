@@ -59,5 +59,11 @@
      <integer name="config_multiuserMaximumUsers">5</integer>
 
      <bool name="config_supportsRoundedCornersOnWindows">false</bool>
+
+     <!-- Fade to black via a color layer on screen off (no GL). -->
+     <bool name="config_animateScreenLights">true</bool>
+
+     <!-- Cap recents to limit full-resolution task snapshots in memory. -->
+     <integer name="config_maxNumVisibleRecentTasks">8</integer>
     
 </resources>

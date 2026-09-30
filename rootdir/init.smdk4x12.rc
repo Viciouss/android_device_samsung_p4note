@@ -32,6 +32,7 @@ on early-fs
 on fs
     # non early mounts
     mount_all /vendor/etc/fstab.${ro.hardware} --late
+    swapon_all /vendor/etc/fstab.${ro.hardware}
     setprop ro.crypto.fuse_sdcard false
 
     # don't wake up the system every 30 seconds
@@ -65,42 +66,18 @@ service console /system/bin/sh
     override
 
 on boot
-    write /proc/sys/vm/extra_free_kbytes 32768
-
     # based on https://github.com/tytydraco/ktweak
-
-    setprop performance.sched.period 4000000
-    setprop performance.sched.tasks 8
-    setprop performance.sched.min.granularity 500000
-    setprop performance.sched.wakeup.granularity 2000000
-    setprop performance.sched.rate_limit_us 4000
-
-    # Limit max perf event processing time to this much CPU usage
-    write /proc/sys/kernel/perf_cpu_time_max_percent 5
 
     # Execute child process before parent after fork
     write /proc/sys/kernel/sched_child_runs_first 1
 
-    # Preliminary requirement for the following values
-    write /proc/sys/kernel/sched_tunable_scaling 0
+    # Since 5.13 the CFS latency/granularity/migration tunables live in
+    # debugfs (/sys/kernel/debug/sched/), so the ktweak writes to
+    # /proc/sys/kernel were dropped; the kernel defaults apply.
 
-    # Reduce the maximum scheduling period for lower latency
-    write /proc/sys/kernel/sched_latency_ns ${performance.sched.period}
-
-    # Schedule this ratio of tasks in the guarenteed sched period
-    write /proc/sys/kernel/sched_min_granularity_ns ${performance.sched.min.granularity}
-
-    # Require preeptive tasks to surpass half of a sched period in vmruntime
-    write /proc/sys/kernel/sched_wakeup_granularity_ns ${performance.sched.wakeup.granularity}
-
-    # Reduce the frequency of task migrations
-    write /proc/sys/kernel/sched_migration_cost_ns 5000000
-
-    # Improve real time latencies by reducing the scheduler migration time
-    write /proc/sys/kernel/sched_nr_migrate 32
-
-    # Disable scheduler statistics to reduce overhead
-    write /proc/sys/kernel/sched_schedstats 0
+    # PELT half-life 32 ms -> 8 ms, so a RenderThread that was idle ramps
+    # schedutil within the first frame after touch-down
+    write /proc/sys/kernel/sched_pelt_multiplier 4
 
     # Disable unnecessary printk logging
     write /proc/sys/kernel/printk_devkmsg off
@@ -135,9 +112,6 @@ on boot
     # Enable fast socket open for receiver and sender
     write /proc/sys/net/ipv4/tcp_fastopen 3
 
-    # Disable SYN cookies
-    write /proc/sys/net/ipv4/tcp_syncookies 0
-
     # Loop over each CPU in the system
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor schedutil
@@ -145,5 +119,8 @@ on boot
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor schedutil
 
     # Apply governor specific tunables for schedutil
-    write /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us ${performance.sched.rate_limit_us}
+    write /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us 4000
+
+    # Let the power HAL apply powerhint.json
+    setprop vendor.powerhal.init 1
 
