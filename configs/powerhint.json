@@ -1,0 +1,19 @@
+{
+  "Nodes": [
+    {
+      "Name": "TAUClampBoost",
+      "Path": "/dev/cpuctl/top-app/cpu.uclamp.min",
+      "Values": ["60", "0"],
+      "DefaultIndex": 1,
+      "ResetOnInit": true
+    }
+  ],
+  "Actions": [
+    {
+      "PowerHint": "INTERACTION",
+      "Node": "TAUClampBoost",
+      "Duration": 0,
+      "Value": "60"
+    }
+  ]
+}

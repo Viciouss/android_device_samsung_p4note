@@ -79,6 +79,7 @@ WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 
 ## SELinux
 BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
+include device/lineage/sepolicy/libperfmgr/sepolicy.mk
 
 ## recovery
 TARGET_RECOVERY_FSTAB := device/samsung/p4note/rootdir/fstab.smdk4x12

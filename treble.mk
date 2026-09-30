@@ -3,8 +3,23 @@ PRODUCT_PACKAGES += \
     android.hardware.security.keymint-service \
 
 # Power
+PRODUCT_SOONG_NAMESPACES += \
+    hardware/google/interfaces \
+    hardware/google/pixel \
+    hardware/lineage/interfaces/power-libperfmgr
+
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.example
+    android.hardware.power-service.lineage-libperfmgr
+
+PRODUCT_COPY_FILES += \
+    device/samsung/p4note/configs/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
+
+# No display idle_state node: boost directly on INTERACTION, held for
+# 500 ms after the last user activity (the default minimum is 1400 ms)
+PRODUCT_VENDOR_PROPERTIES += \
+    vendor.powerhal.disp.idle_support=false \
+    vendor.powerhal.interaction.min=500 \
+    vendor.powerhal.interaction.offset=500
 
 # DRM
 PRODUCT_PACKAGES += \
