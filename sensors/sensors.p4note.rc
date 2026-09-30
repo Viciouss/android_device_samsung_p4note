@@ -8,12 +8,12 @@ on early-init
 
     setprop ro.iio.accel.name "LSM330DLC Accelerometer"
     setprop ro.iio.accel.vendor "ST Microelectronics"
-    setprop ro.iio.accel.quirks "no-trig,no-event"
-    write /sys/bus/iio/devices/iio:device0/sampling_frequency 400
-    
+    setprop ro.iio.accel.quirks "no-event"
+    setprop ro.iio.accel.max_freq 10
+
     setprop ro.iio.anglvel.name "LSM330DLC Gyroscope"
     setprop ro.iio.anglvel.vendor "ST Microelectronics"
-    setprop ro.iio.anglvel.quirks "no-trig,no-event"
+    setprop ro.iio.anglvel.quirks "no-event"
 
     setprop ro.iio.illuminance.name "AL3201"
     setprop ro.iio.illuminance.vendor "Dyna Image"
