@@ -1,6 +1,5 @@
 import /vendor/etc/init/hw/init.${ro.hardware}.usb.rc
 import /vendor/etc/init/hw/init.wifi.rc
-import /vendor/etc/init/hw/init.bluetooth.rc
 
 ## init goal order
 # early-init, init, late-init

@@ -19,7 +19,7 @@ subsystem dma_heap
 /dev/teepriv0                                          0660    system       keystore
 /dev/ttyUSB0                                           0666    system       system
 /dev/block/platform/soc/12550000.mmc/by-name/USERDATA  0600    system       system
-/dev/rfkill                                            0660    bluetooth    net_bt
+/dev/rfkill                                            0660    root         root
 /dev/ion                                               0664    system       system
 /dev/iio:device*                                       0660    system       system
 /dev/wlan                                              0666    system       system
