@@ -1,0 +1,4 @@
+# The AIDL HAL soft-blocks the first bluetooth rfkill before opening the HCI
+# user channel. Here that is hci0's own rfkill, so the bind then fails with
+# ERFKILL. Keep it out and don't log the denial.
+dontaudit hal_bluetooth_default rfkill_device:chr_file rw_file_perms;
