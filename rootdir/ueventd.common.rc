@@ -25,3 +25,26 @@ subsystem dma_heap
 /dev/wlan                                              0666    system       system
 /dev/dma_heap/linux,cma	                               0666    system       graphics
 /dev/dma_heap/system                                   0666    system       system
+
+# LSM330DLC accel: sensor HAL (system) drives the triggered buffer
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  sampling_frequency              0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  buffer/enable                   0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  buffer/length                   0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  trigger/current_trigger         0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  scan_elements/in_accel_x_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  scan_elements/in_accel_y_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  scan_elements/in_accel_z_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-0019/iio:device*  scan_elements/in_timestamp_en   0664  system  system
+
+# LSM330DLC gyro: sensor HAL (system) drives the triggered buffer
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  sampling_frequency                0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  buffer/enable                     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  buffer/length                     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  trigger/current_trigger           0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  scan_elements/in_anglvel_x_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  scan_elements/in_anglvel_y_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  scan_elements/in_anglvel_z_en     0664  system  system
+/sys/devices/platform/soc/13870000.i2c/i2c-1/1-006b/iio:device*  scan_elements/in_timestamp_en     0664  system  system
+
+# Flash LED (leds-sgm3140), switched as the torch by the camera provider
+/sys/devices/platform/led-controller/leds/white:flash  brightness  0660  cameraserver  camera
