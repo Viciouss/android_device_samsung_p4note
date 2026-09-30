@@ -44,6 +44,7 @@ V4L2Camera* V4L2Camera::NewV4L2Camera(
 
   const std::string path = pipeline->capture_path();
   const uint8_t facing = pipeline->facing();
+  std::string flash_led = pipeline->flash_led();
   std::shared_ptr<V4L2Wrapper> v4l2_wrapper(
       V4L2Wrapper::NewV4L2Wrapper(path, std::move(pipeline)));
   if (!v4l2_wrapper) {
@@ -52,21 +53,26 @@ V4L2Camera* V4L2Camera::NewV4L2Camera(
   }
 
   std::unique_ptr<Metadata> metadata;
-  int res = GetV4L2Metadata(v4l2_wrapper, facing, &metadata);
+  int res =
+      GetV4L2Metadata(v4l2_wrapper, facing, !flash_led.empty(), &metadata);
   if (res) {
     HAL_LOGE("Failed to initialize V4L2 metadata: %d", res);
     return nullptr;
   }
 
-  return new V4L2Camera(id, std::move(v4l2_wrapper), std::move(metadata));
+  return new V4L2Camera(id, std::move(v4l2_wrapper), std::move(metadata),
+                        std::move(flash_led));
 }
 
 V4L2Camera::V4L2Camera(int id,
                        std::shared_ptr<V4L2Wrapper> v4l2_wrapper,
-                       std::unique_ptr<Metadata> metadata)
+                       std::unique_ptr<Metadata> metadata,
+                       std::string flash_led)
     : default_camera_hal::Camera(id),
       device_(std::move(v4l2_wrapper)),
       metadata_(std::move(metadata)),
+      id_(id),
+      flash_led_(std::move(flash_led)),
       buffer_enqueuer_(new FunctionThread(
           std::bind(&V4L2Camera::enqueueRequestBuffers, this))),
       buffer_dequeuer_(new FunctionThread(
@@ -93,6 +99,11 @@ void V4L2Camera::SetConflictingDevices(const std::vector<int>& camera_ids) {
   }
 }
 
+void V4L2Camera::SetOpenListener(
+    std::function<void(int id, bool open)> listener) {
+  open_listener_ = std::move(listener);
+}
+
 int V4L2Camera::connect() {
   HAL_LOG_ENTER();
 
@@ -101,10 +112,20 @@ int V4L2Camera::connect() {
     return -EIO;
   }
 
+  // Before powering the sensor up, so a torch that is on goes off first.
+  if (open_listener_) {
+    open_listener_(id_, true);
+  }
+
   connection_.reset(new V4L2Wrapper::Connection(device_));
   if (connection_->status()) {
     HAL_LOGE("Failed to connect to device.");
-    return connection_->status();
+    int res = connection_->status();
+    connection_.reset();
+    if (open_listener_) {
+      open_listener_(id_, false);
+    }
+    return res;
   }
 
   // TODO(b/29185945): confirm this is a supported device.
@@ -113,9 +134,6 @@ int V4L2Camera::connect() {
   // (Alternatively, better hotplugging support may make this unecessary
   // by disabling cameras that get disconnected and checking newly connected
   // cameras, so connect() is never called on an unsupported camera)
-
-  // TODO(b/29158098): Inform service of any flashes that are no longer
-  // available because this camera is in use.
   return 0;
 }
 
@@ -124,8 +142,9 @@ void V4L2Camera::disconnect() {
 
   connection_.reset();
 
-  // TODO(b/29158098): Inform service of any flashes that are available again
-  // because this camera is no longer in use.
+  if (open_listener_) {
+    open_listener_(id_, false);
+  }
 }
 
 int V4L2Camera::flushBuffers() {
@@ -344,35 +363,25 @@ int V4L2Camera::setupStreams(camera3_stream_configuration_t* stream_config) {
   }
 
   // stream_config should have been validated; assume at least 1 stream.
+  // The device produces one frame size at a time, and every stream is made
+  // from that frame. Capture at the size of the video encoder stream, which
+  // is the one converted every frame (a recording often comes with a larger
+  // JPEG stream for snapshots), otherwise at the largest size. The other
+  // streams are scaled in software, cropped to keep their aspect ratio.
   camera3_stream_t* stream = stream_config->streams[0];
+  for (uint32_t i = 1; i < stream_config->num_streams; ++i) {
+    camera3_stream_t* candidate = stream_config->streams[i];
+    if (stream->usage & GRALLOC_USAGE_HW_VIDEO_ENCODER) {
+      break;
+    }
+    if ((candidate->usage & GRALLOC_USAGE_HW_VIDEO_ENCODER) ||
+        candidate->width * candidate->height > stream->width * stream->height) {
+      stream = candidate;
+    }
+  }
   int format = stream->format;
   uint32_t width = stream->width;
   uint32_t height = stream->height;
-
-  if (stream_config->num_streams > 1) {
-    // The device produces one frame size at a time, and every stream is made
-    // from that frame (converted to the format of the stream), so the streams
-    // may differ in format but not in size.
-    // Technically, this error should be thrown during validation, but
-    // since it isn't a spec-valid error validation isn't set up to check it.
-    for (uint32_t i = 1; i < stream_config->num_streams; ++i) {
-      stream = stream_config->streams[i];
-      if (stream->width != width || stream->height != height) {
-        HAL_LOGE(
-            "All streams need the same size "
-            "(stream 0 is format %d, width %u, height %u, "
-            "stream %d is format %d, width %u, height %u).",
-            format,
-            width,
-            height,
-            i,
-            stream->format,
-            stream->width,
-            stream->height);
-        return -EINVAL;
-      }
-    }
-  }
 
   // Ensure the stream is off.
   int res = device_->StreamOff();
@@ -400,9 +409,13 @@ int V4L2Camera::setupStreams(camera3_stream_configuration_t* stream_config) {
   for (uint32_t i = 0; i < stream_config->num_streams; ++i) {
     stream = stream_config->streams[i];
 
-    // Override HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED format.
+    // Override HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED format. Video encoder
+    // surfaces get YUV: the software encoders take it as is, but convert RGBA
+    // back to YUV in plain C, which caps 720p recording at ~3 fps.
     if (stream->format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED) {
-      stream->format = HAL_PIXEL_FORMAT_RGBA_8888;
+      stream->format = (stream->usage & GRALLOC_USAGE_HW_VIDEO_ENCODER)
+                           ? HAL_PIXEL_FORMAT_YCbCr_420_888
+                           : HAL_PIXEL_FORMAT_RGBA_8888;
     }
 
     // Max buffers as reported by the device.

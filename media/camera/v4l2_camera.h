@@ -21,6 +21,7 @@
 
 #include <array>
 #include <condition_variable>
+#include <functional>
 #include <queue>
 #include <string>
 #include <vector>
@@ -52,12 +53,20 @@ class V4L2Camera : public default_camera_hal::Camera {
   // share hardware with it. Call before the camera info is queried.
   void SetConflictingDevices(const std::vector<int>& camera_ids);
 
+  // sysfs directory of the flash LED of this camera, or empty if it has none.
+  const std::string& flash_led() const { return flash_led_; }
+  // Called with true before the device is connected, and with false once it
+  // is disconnected again (or connecting failed). The HAL uses this to take
+  // the torch away while a camera is open.
+  void SetOpenListener(std::function<void(int id, bool open)> listener);
+
  private:
   // Constructor private to allow failing on bad input.
   // Use NewV4L2Camera instead.
   V4L2Camera(int id,
              std::shared_ptr<V4L2Wrapper> v4l2_wrapper,
-             std::unique_ptr<Metadata> metadata);
+             std::unique_ptr<Metadata> metadata,
+             std::string flash_led);
 
   // default_camera_hal::Camera virtual methods.
   // Connect to the device: open dev nodes, etc.
@@ -101,6 +110,9 @@ class V4L2Camera : public default_camera_hal::Camera {
   std::shared_ptr<V4L2Wrapper> device_;
   std::unique_ptr<V4L2Wrapper::Connection> connection_;
   std::unique_ptr<Metadata> metadata_;
+  const int id_;
+  const std::string flash_led_;
+  std::function<void(int id, bool open)> open_listener_;
   // Storage for the conflicting_devices of camera_info_t.
   std::vector<std::string> conflicting_ids_;
   std::vector<char*> conflicting_devices_;

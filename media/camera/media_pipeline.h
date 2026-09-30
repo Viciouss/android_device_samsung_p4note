@@ -54,6 +54,10 @@ struct PipelineFormat {
   // Drivers may adjust the size they are given (the FIMC-IS ISP crops a fixed
   // margin), and the next pad has to match what was actually negotiated.
   bool use_previous_size;
+  // Use the size of the configured stream instead of width/height, for
+  // sensors that output each stream size natively. width/height are used
+  // until a stream is configured.
+  bool use_stream_size = false;
 };
 
 // A frame size of the capture node.
@@ -81,6 +85,12 @@ struct PipelineConfig {
   std::vector<PipelineLink> links;
   // Applied in order, after the links.
   std::vector<PipelineFormat> formats;
+  // The capture node has to be closed and reopened before it can stream
+  // again: a second STREAMON within one open gets few or no frames.
+  bool reopen_to_restart = false;
+  // sysfs directory of the LED class device of the flash next to this
+  // sensor, or empty if there is none. Used as the torch.
+  std::string flash_led;
 };
 
 // The cameras of this device, in camera id order (see pipeline_configs.cpp).
@@ -95,8 +105,12 @@ class MediaPipeline {
 
   // Enable the links and negotiate the formats of this pipeline. This changes
   // links other pipelines depend on, so it must not be called while another
-  // pipeline sharing entities is streaming. Returns 0 or a negative errno.
-  int Apply();
+  // pipeline sharing entities is streaming. |stream_size| is the size of the
+  // configured stream, if there is one. Returns 0 or a negative errno.
+  int Apply(const PipelineSize* stream_size = nullptr);
+  // Whether the pipeline formats depend on the stream size, so Apply() has
+  // to be called again when it changes.
+  bool follows_stream_size() const;
 
   const std::string& name() const { return config_.name; }
   // Path of the video node to capture from, e.g. /dev/video4.
@@ -107,6 +121,8 @@ class MediaPipeline {
   }
   int64_t min_frame_duration_ns() const { return config_.min_frame_duration_ns; }
   int64_t max_frame_duration_ns() const { return config_.max_frame_duration_ns; }
+  bool reopen_to_restart() const { return config_.reopen_to_restart; }
+  const std::string& flash_led() const { return config_.flash_led; }
 
  private:
   struct Entity {

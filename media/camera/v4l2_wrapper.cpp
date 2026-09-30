@@ -141,6 +141,7 @@ void V4L2Wrapper::Disconnect() {
 
   device_fd_.reset(-1);  // Includes close().
   streaming_ = false;
+  streamed_since_open_ = false;
   format_.reset();
   {
     std::lock_guard<std::mutex> pending_lock(pending_lock_);
@@ -176,6 +177,13 @@ int V4L2Wrapper::StreamOn() {
     return 0;
   }
 
+  if (streamed_since_open_ && pipeline_ && pipeline_->reopen_to_restart()) {
+    int res = Reopen();
+    if (res) {
+      return res;
+    }
+  }
+
   int res = QueueFreeBuffers();
   if (res) {
     return res;
@@ -188,6 +196,7 @@ int V4L2Wrapper::StreamOn() {
   }
 
   streaming_ = true;
+  streamed_since_open_ = true;
   HAL_LOGV("Stream turned on.");
   return 0;
 }
@@ -220,6 +229,104 @@ int V4L2Wrapper::StreamOff() {
   pending_requests_.clear();
   HAL_LOGV("Stream turned off.");
   return 0;
+}
+
+int V4L2Wrapper::Reopen() {
+  HAL_LOGI("Reopening %s to restart the stream.", device_path_.c_str());
+
+  {
+    // The device can't release buffers that are still mapped.
+    std::lock_guard<std::mutex> guard(buffer_queue_lock_);
+    UnmapBuffers();
+    buffers_.clear();
+  }
+  {
+    // The old node must be closed before the new open, or the pipeline
+    // stays powered and nothing is reset.
+    std::lock_guard<std::mutex> lock(device_lock_);
+    device_fd_.reset(-1);
+  }
+  streamed_since_open_ = false;
+
+  if (pipeline_) {
+    const PipelineSize size = {format_->width(), format_->height()};
+    int res = pipeline_->Apply(&size);
+    if (res) {
+      HAL_LOGE("Failed to set up the media pipeline of %s: %d",
+               pipeline_->name().c_str(),
+               res);
+      return res;
+    }
+  }
+
+  int fd = TEMP_FAILURE_RETRY(open(device_path_.c_str(), O_RDWR | O_NONBLOCK));
+  if (fd < 0) {
+    HAL_LOGE("failed to reopen %s (%s)", device_path_.c_str(), strerror(errno));
+    return -ENODEV;
+  }
+  {
+    std::lock_guard<std::mutex> lock(device_lock_);
+    device_fd_.reset(fd);
+  }
+
+  // Set the format the old node had, so SetFormat() can still skip it.
+  v4l2_format new_format;
+  format_->FillFormatRequest(&new_format);
+  if (IoctlLocked(VIDIOC_S_FMT, &new_format) < 0) {
+    HAL_LOGE("S_FMT after reopen failed: %s", strerror(errno));
+    return -ENODEV;
+  }
+  if (*format_ != new_format) {
+    HAL_LOGE("Device changed the stream format after reopen.");
+    return -ENODEV;
+  }
+  SetCaptureCrop();
+  return RequestBuffers(kNumDeviceBuffers);
+}
+
+void V4L2Wrapper::SetCaptureCrop() {
+  if (!pipeline_) {
+    return;
+  }
+
+  v4l2_selection selection;
+  memset(&selection, 0, sizeof(selection));
+  selection.type = format_->type();
+  selection.target = V4L2_SEL_TGT_CROP_BOUNDS;
+  if (IoctlLocked(VIDIOC_G_SELECTION, &selection) < 0) {
+    HAL_LOGW("G_SELECTION of the crop bounds failed: %s", strerror(errno));
+    return;
+  }
+  const uint32_t in_width = selection.r.width;
+  const uint32_t in_height = selection.r.height;
+  const uint32_t out_width = format_->width();
+  const uint32_t out_height = format_->height();
+  if (!in_width || !in_height || !out_width || !out_height) {
+    return;
+  }
+
+  // The largest centered rectangle with the output aspect ratio. The width
+  // is a multiple of 16 and the height of 4, as the FIMC scaler wants.
+  uint32_t width = in_width;
+  uint32_t height = in_height;
+  if (uint64_t(in_width) * out_height > uint64_t(in_height) * out_width) {
+    width = (uint64_t(in_height) * out_width / out_height) & ~15u;
+  } else {
+    height = (uint64_t(in_width) * out_height / out_width) & ~3u;
+  }
+  selection.target = V4L2_SEL_TGT_CROP;
+  selection.r.left = ((in_width - width) / 2) & ~1u;
+  selection.r.top = ((in_height - height) / 2) & ~1u;
+  selection.r.width = width;
+  selection.r.height = height;
+  if (IoctlLocked(VIDIOC_S_SELECTION, &selection) < 0) {
+    HAL_LOGW("S_SELECTION of crop %ux%u failed: %s", width, height,
+             strerror(errno));
+    return;
+  }
+  HAL_LOGV("Capturing %ux%u from %ux%u at %d,%d of %ux%u.", out_width,
+           out_height, selection.r.width, selection.r.height,
+           selection.r.left, selection.r.top, in_width, in_height);
 }
 
 int V4L2Wrapper::QueryControl(uint32_t control_id,
@@ -596,6 +703,22 @@ int V4L2Wrapper::SetFormat(const StreamFormat& desired_format,
   const StreamFormat resolved_format(format);
   resolved_format.FillFormatRequest(&new_format);
 
+  // A sensor that outputs the stream size natively has to be set up for it
+  // before the capture node takes the new format.
+  if (pipeline_ && pipeline_->follows_stream_size()) {
+    const PipelineSize size = {resolved_format.width(),
+                               resolved_format.height()};
+    int res = pipeline_->Apply(&size);
+    if (res) {
+      HAL_LOGE("Failed to set up the media pipeline of %s for %ux%u: %d",
+               pipeline_->name().c_str(),
+               size.width,
+               size.height,
+               res);
+      return res;
+    }
+  }
+
   // TODO(b/29334616): When async, this will need to check if the stream
   // is on, and if so, lock it off while setting format.
   if (IoctlLocked(VIDIOC_S_FMT, &new_format) < 0) {
@@ -623,6 +746,7 @@ int V4L2Wrapper::SetFormat(const StreamFormat& desired_format,
 
   // Keep track of our new format.
   format_.reset(new StreamFormat(new_format));
+  SetCaptureCrop();
 
   // Format changed, request new buffers.
   int res = RequestBuffers(kNumDeviceBuffers);

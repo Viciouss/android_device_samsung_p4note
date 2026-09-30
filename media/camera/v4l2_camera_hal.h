@@ -19,6 +19,9 @@
 #ifndef V4L2_CAMERA_HAL_V4L2_CAMERA_HAL_H_
 #define V4L2_CAMERA_HAL_V4L2_CAMERA_HAL_H_
 
+#include <mutex>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <hardware/camera_common.h>
@@ -53,10 +56,28 @@ class V4L2CameraHAL {
   int openDevice(const hw_module_t* mod, const char* name, hw_device_t** dev);
 
  private:
+  using TorchStatus = std::pair<int, torch_mode_status_t>;
+
+  // A camera was opened (|open|) or closed again.
+  void onCameraOpenChanged(int id, bool open);
+  // Switch the flash LED of camera |id|. Returns 0 or a negative errno.
+  int writeTorch(int id, bool on);
+  // Report torch status changes to the framework. Call without mTorchLock.
+  void notifyTorchStatus(const std::vector<TorchStatus>& changes);
+
   // Vector of cameras.
   std::vector<std::unique_ptr<default_camera_hal::Camera>> mCameras;
+  // Flash LED of each camera, empty for cameras without one.
+  std::vector<std::string> mFlashLeds;
   // Callback handle.
   const camera_module_callbacks_t* mCallbacks;
+
+  std::mutex mTorchLock;
+  // Cameras that are open. All cameras share the capture node and conflict
+  // with each other, so any open camera takes every torch away.
+  int mOpenCameras;
+  // Camera whose torch is on, or -1.
+  int mTorchOn;
 
   DISALLOW_COPY_AND_ASSIGN(V4L2CameraHAL);
 };

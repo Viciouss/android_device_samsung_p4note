@@ -295,12 +295,32 @@ int ImageProcessor::Scale(const FrameBuffer& in_frame, FrameBuffer* out_frame) {
            << in_frame.GetHeight() << " to " << out_frame->GetWidth() << "x"
            << out_frame->GetHeight();
 
+  // Scale the largest centered part of |in_frame| with the aspect ratio of
+  // |out_frame|, so a stream of another aspect ratio isn't stretched. Offsets
+  // stay even, so the chroma planes line up.
+  const uint32_t in_width = in_frame.GetWidth();
+  const uint32_t in_height = in_frame.GetHeight();
+  uint32_t crop_width = in_width;
+  uint32_t crop_height = in_height;
+  if (uint64_t(in_width) * out_frame->GetHeight() >
+      uint64_t(in_height) * out_frame->GetWidth()) {
+    crop_width = (uint64_t(in_height) * out_frame->GetWidth() /
+                  out_frame->GetHeight()) & ~1u;
+  } else {
+    crop_height = (uint64_t(in_width) * out_frame->GetHeight() /
+                   out_frame->GetWidth()) & ~1u;
+  }
+  const uint32_t left = ((in_width - crop_width) / 2) & ~1u;
+  const uint32_t top = ((in_height - crop_height) / 2) & ~1u;
+  const uint8_t* y = in_frame.GetData();
+  const uint8_t* u = y + in_width * in_height;
+  const uint8_t* v = u + in_width * in_height / 4;
+
   int ret = libyuv::I420Scale(
-      in_frame.GetData(), in_frame.GetWidth(),
-      in_frame.GetData() + in_frame.GetWidth() * in_frame.GetHeight(),
-      in_frame.GetWidth() / 2,
-      in_frame.GetData() + in_frame.GetWidth() * in_frame.GetHeight() * 5 / 4,
-      in_frame.GetWidth() / 2, in_frame.GetWidth(), in_frame.GetHeight(),
+      y + top * in_width + left, in_width,
+      u + (top / 2) * (in_width / 2) + left / 2, in_width / 2,
+      v + (top / 2) * (in_width / 2) + left / 2, in_width / 2,
+      crop_width, crop_height,
       out_frame->GetData(), out_frame->GetWidth(),
       out_frame->GetData() + out_frame->GetWidth() * out_frame->GetHeight(),
       out_frame->GetWidth() / 2,

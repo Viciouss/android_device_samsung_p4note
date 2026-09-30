@@ -150,7 +150,16 @@ const MediaPipeline::Entity* MediaPipeline::FindEntity(
   return nullptr;
 }
 
-int MediaPipeline::Apply() {
+bool MediaPipeline::follows_stream_size() const {
+  for (const auto& format : config_.formats) {
+    if (format.use_stream_size) {
+      return true;
+    }
+  }
+  return false;
+}
+
+int MediaPipeline::Apply(const PipelineSize* stream_size) {
   HAL_LOG_ENTER();
   std::lock_guard<std::mutex> lock(gPipelineLock);
 
@@ -168,6 +177,9 @@ int MediaPipeline::Apply() {
     if (requested.use_previous_size) {
       requested.width = width;
       requested.height = height;
+    } else if (requested.use_stream_size && stream_size) {
+      requested.width = stream_size->width;
+      requested.height = stream_size->height;
     }
     int res = SetFormat(requested, &width, &height);
     if (res) {

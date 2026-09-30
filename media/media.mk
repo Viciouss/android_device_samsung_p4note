@@ -1,3 +1,7 @@
+# Codec2 V4L2 service (MFC). external/v4l2_codec2 is its own Soong namespace;
+# without it the package below is silently not built.
+PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
+
 PRODUCT_PACKAGES += \
     android.hardware.media.c2@1.2-service-v4l2
 

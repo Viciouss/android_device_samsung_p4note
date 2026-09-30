@@ -22,8 +22,12 @@
 #include "v4l2_camera_hal.h"
 
 #include <algorithm>
+#include <cerrno>
+#include <csignal>
 #include <cstdlib>
+#include <cstring>
 
+#include <android-base/file.h>
 #include <android-base/parseint.h>
 
 #include "common.h"
@@ -43,8 +47,12 @@ namespace v4l2_camera_hal {
 // Default global camera hal.
 static V4L2CameraHAL gCameraHAL;
 
-V4L2CameraHAL::V4L2CameraHAL() : mCameras(), mCallbacks(NULL) {
+V4L2CameraHAL::V4L2CameraHAL()
+    : mCameras(), mCallbacks(NULL), mOpenCameras(0), mTorchOn(-1) {
   HAL_LOG_ENTER();
+  // dumpsys hands its output fd down to the HAL; a reader that stops early
+  // (e.g. "dumpsys media.camera | head") would kill the provider mid-session.
+  signal(SIGPIPE, SIG_IGN);
   // One camera per configured sensor pipeline (see pipeline_configs.cpp).
   // Sensors that didn't probe don't get a camera.
   std::vector<V4L2Camera*> cameras;
@@ -60,6 +68,9 @@ V4L2CameraHAL::V4L2CameraHAL() : mCameras(), mCallbacks(NULL) {
       HAL_LOGE("Failed to initialize camera %s.", config.name.c_str());
       continue;
     }
+    cam->SetOpenListener(
+        [this](int id, bool open) { onCameraOpenChanged(id, open); });
+    mFlashLeds.push_back(cam->flash_led());
     cameras.push_back(cam.get());
     mCameras.push_back(std::move(cam));
   }
@@ -73,6 +84,12 @@ V4L2CameraHAL::V4L2CameraHAL() : mCameras(), mCallbacks(NULL) {
       }
     }
     cameras[i]->SetConflictingDevices(others);
+  }
+  // A restarted provider starts with the torch off, whatever it was before.
+  for (size_t i = 0; i < mFlashLeds.size(); ++i) {
+    if (!mFlashLeds[i].empty()) {
+      writeTorch(static_cast<int>(i), false);
+    }
   }
 }
 
@@ -115,11 +132,89 @@ int V4L2CameraHAL::openLegacy(const hw_module_t* /*module*/,
   return -ENOSYS;
 }
 
-int V4L2CameraHAL::setTorchMode(const char* /*camera_id*/, bool /*enabled*/) {
+int V4L2CameraHAL::setTorchMode(const char* camera_id, bool enabled) {
   HAL_LOG_ENTER();
-  // TODO(b/29158098): HAL is required to respond appropriately if
-  // the desired camera actually does support flash.
-  return -ENOSYS;
+
+  int id;
+  if (!android::base::ParseInt(camera_id, &id, 0, getNumberOfCameras() - 1)) {
+    return -EINVAL;
+  }
+  if (mFlashLeds[id].empty()) {
+    return -ENOSYS;
+  }
+
+  std::vector<TorchStatus> changes;
+  {
+    std::lock_guard<std::mutex> lock(mTorchLock);
+    if (mOpenCameras > 0) {
+      return -EBUSY;
+    }
+    if (enabled == (mTorchOn == id)) {
+      return 0;
+    }
+    int res = writeTorch(id, enabled);
+    if (res) {
+      return res;
+    }
+    mTorchOn = enabled ? id : -1;
+    changes.emplace_back(id, enabled ? TORCH_MODE_STATUS_AVAILABLE_ON
+                                     : TORCH_MODE_STATUS_AVAILABLE_OFF);
+  }
+  notifyTorchStatus(changes);
+  return 0;
+}
+
+void V4L2CameraHAL::onCameraOpenChanged(int id, bool open) {
+  HAL_LOGV("camera %d %s", id, open ? "opened" : "closed");
+
+  std::vector<TorchStatus> changes;
+  {
+    std::lock_guard<std::mutex> lock(mTorchLock);
+    mOpenCameras += open ? 1 : -1;
+    if (open && mOpenCameras == 1) {
+      // The first camera to open takes all torches away.
+      if (mTorchOn >= 0) {
+        writeTorch(mTorchOn, false);
+        mTorchOn = -1;
+      }
+      for (size_t i = 0; i < mFlashLeds.size(); ++i) {
+        if (!mFlashLeds[i].empty()) {
+          changes.emplace_back(static_cast<int>(i),
+                               TORCH_MODE_STATUS_NOT_AVAILABLE);
+        }
+      }
+    } else if (!open && mOpenCameras == 0) {
+      for (size_t i = 0; i < mFlashLeds.size(); ++i) {
+        if (!mFlashLeds[i].empty()) {
+          changes.emplace_back(static_cast<int>(i),
+                               TORCH_MODE_STATUS_AVAILABLE_OFF);
+        }
+      }
+    }
+  }
+  notifyTorchStatus(changes);
+}
+
+int V4L2CameraHAL::writeTorch(int id, bool on) {
+  const std::string path = mFlashLeds[id] + "/brightness";
+  if (!android::base::WriteStringToFile(on ? "1" : "0", path)) {
+    int res = -errno;
+    HAL_LOGE("Failed to switch torch %s via %s: %s", on ? "on" : "off",
+             path.c_str(), strerror(errno));
+    return res;
+  }
+  return 0;
+}
+
+void V4L2CameraHAL::notifyTorchStatus(
+    const std::vector<TorchStatus>& changes) {
+  if (!mCallbacks || !mCallbacks->torch_mode_status_change) {
+    return;
+  }
+  for (const auto& [id, status] : changes) {
+    mCallbacks->torch_mode_status_change(mCallbacks,
+                                         std::to_string(id).c_str(), status);
+  }
 }
 
 int V4L2CameraHAL::openDevice(const hw_module_t* module,

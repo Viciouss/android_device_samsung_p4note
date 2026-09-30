@@ -130,6 +130,12 @@ class V4L2Wrapper {
   int MapBuffers();
   // Requires |buffer_queue_lock_| to be held.
   void UnmapBuffers();
+  // Close the device node and open it again with the current format and a
+  // new set of buffers. Only while the stream is off.
+  int Reopen();
+  // Crop the input of the capture node to the aspect ratio of |format_|, so
+  // its scaler doesn't stretch the picture. Best effort.
+  void SetCaptureCrop();
 
   inline bool connected() { return device_fd_.get() >= 0; }
 
@@ -152,6 +158,8 @@ class V4L2Wrapper {
   // exynos4-is capture driver fails STREAMON with EBUSY while it's streaming,
   // so repeated StreamOn() calls must not reach the device.
   std::atomic<bool> streaming_{false};
+  // Whether STREAMON succeeded since the device node was opened.
+  bool streamed_since_open_ = false;
   // Lock protecting use of the buffer tracker.
   std::mutex buffer_queue_lock_;
   // Lock protecting use of the device.

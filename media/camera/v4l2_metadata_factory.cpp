@@ -42,6 +42,7 @@ const size_t kV4L2MaxJpegSize = 6000000;
 
 int GetV4L2Metadata(std::shared_ptr<V4L2Wrapper> device,
                     uint8_t facing,
+                    bool has_flash,
                     std::unique_ptr<Metadata>* result) {
   HAL_LOG_ENTER();
 
@@ -302,11 +303,16 @@ int GetV4L2Metadata(std::shared_ptr<V4L2Wrapper> device,
        {OTHER_TEMPLATES, ANDROID_EDGE_MODE_FAST}}));
 
   // TODO(b/31023454): subcomponents of flash.
+  // A flash unit is only used as the torch (V4L2CameraHAL::setTorchMode);
+  // capture requests still can't fire it, so FLASH_MODE stays OFF only.
   components.insert(
       std::unique_ptr<PartialMetadataInterface>(new Property<uint8_t>(
-          ANDROID_FLASH_INFO_AVAILABLE, ANDROID_FLASH_INFO_AVAILABLE_FALSE)));
-  components.insert(FixedState<uint8_t>(ANDROID_FLASH_STATE,
-                                        ANDROID_FLASH_STATE_UNAVAILABLE));
+          ANDROID_FLASH_INFO_AVAILABLE,
+          has_flash ? ANDROID_FLASH_INFO_AVAILABLE_TRUE
+                    : ANDROID_FLASH_INFO_AVAILABLE_FALSE)));
+  components.insert(FixedState<uint8_t>(
+      ANDROID_FLASH_STATE,
+      has_flash ? ANDROID_FLASH_STATE_READY : ANDROID_FLASH_STATE_UNAVAILABLE));
   components.insert(NoEffectMenuControl<uint8_t>(
       ANDROID_FLASH_MODE, DO_NOT_REPORT_OPTIONS, {ANDROID_FLASH_MODE_OFF}));
 

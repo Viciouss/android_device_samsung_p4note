@@ -35,11 +35,14 @@ const std::vector<PipelineConfig>& GetPipelineConfigs() {
       //
       // The ISX012 has its own ISP and sends YUV over CSI-2, so the frames
       // go straight into FIMC.1's camera input without touching FIMC-IS.
+      // Its ISP scales to any of the sizes below by itself (the stock
+      // driver only wrote them to HSIZE_MONI/VSIZE_MONI), so the sensor
+      // outputs each stream size natively with its full field of view.
       {
           "ISX012 (rear)",
           "fimc.1.capture",
           ANDROID_LENS_FACING_BACK,
-          {{640, 480}},
+          {{1280, 720}, {640, 480}},
           33333333,   // 30 fps
           100000000,  // 10 fps
           {
@@ -49,11 +52,16 @@ const std::vector<PipelineConfig>& GetPipelineConfigs() {
               {"s5p-mipi-csis.0", 1, "FIMC.1", 0, true},
           },
           {
-              {"ISX012", 0, MEDIA_BUS_FMT_VYUY8_2X8, 640, 480, false},
-              {"s5p-mipi-csis.0", 0, MEDIA_BUS_FMT_VYUY8_2X8, 640, 480, false},
-              {"s5p-mipi-csis.0", 1, MEDIA_BUS_FMT_VYUY8_2X8, 640, 480, false},
-              {"FIMC.1", 0, MEDIA_BUS_FMT_VYUY8_2X8, 640, 480, false},
+              {"ISX012", 0, MEDIA_BUS_FMT_VYUY8_2X8, 640, 480, false,
+               /*use_stream_size=*/true},
+              {"s5p-mipi-csis.0", 0, MEDIA_BUS_FMT_VYUY8_2X8, 0, 0, true},
+              {"s5p-mipi-csis.0", 1, MEDIA_BUS_FMT_VYUY8_2X8, 0, 0, true},
+              {"FIMC.1", 0, MEDIA_BUS_FMT_VYUY8_2X8, 0, 0, true},
           },
+          false,
+          // SGM3140 (leds-sgm3140). Its brightness switches torch mode,
+          // which has no timeout, unlike the flash strobe.
+          "/sys/class/leds/white:flash",
       },
       // Front: S5K6A3 -> s5p-mipi-csis.1 -> FIMC-LITE.1 -> FIMC-IS-ISP
       //        -> FIMC.1
@@ -63,7 +71,9 @@ const std::vector<PipelineConfig>& GetPipelineConfigs() {
           "S5K6A3 (front)",
           "fimc.1.capture",
           ANDROID_LENS_FACING_FRONT,
-          {{1280, 720}},
+          // 640x480 is the stock recording size; FIMC.1 crops the 4:3 middle
+          // of the 16:9 frame and scales it down in hardware.
+          {{1280, 720}, {640, 480}},
           33333333,   // 30 fps
           100000000,  // 10 fps
           {
@@ -86,6 +96,10 @@ const std::vector<PipelineConfig>& GetPipelineConfigs() {
               {"FIMC-IS-ISP", 1, MEDIA_BUS_FMT_YUV10_1X30, 1296, 732, false},
               {"FIMC.1", 1, MEDIA_BUS_FMT_YUV10_1X30, 0, 0, true},
           },
+          // FIMC.1 stops getting frames from the FIMC-IS ISP after a
+          // STREAMOFF/STREAMON within one open (it hangs inside a frame, the
+          // picture shifted and wrapped); closing the node resets it.
+          true,
       },
   };
   return kConfigs;

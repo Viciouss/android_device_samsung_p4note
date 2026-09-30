@@ -26,9 +26,10 @@ namespace v4l2_camera_hal {
 
 // A static function to get a Metadata object populated with V4L2 or other
 // controls as appropriate. |facing| is the ANDROID_LENS_FACING_* value the
-// camera reports.
+// camera reports, |has_flash| whether it has a flash unit (torch).
 int GetV4L2Metadata(std::shared_ptr<V4L2Wrapper> device,
                     uint8_t facing,
+                    bool has_flash,
                     std::unique_ptr<Metadata>* result);
 
 }  // namespace v4l2_camera_hal
