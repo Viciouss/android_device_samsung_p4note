@@ -268,7 +268,7 @@
                 </path>
         </device>
 
-        <stream type="pcm" dir="out" cardname="p4note" device="0" rate="44100">
+        <stream type="pcm" dir="out" cardname="p4note" device="0" rate="44100" period_size="1024" period_count="4">
         </stream>
 
         <stream type="pcm" dir="in" cardname="p4note" device="0" rate="44100">

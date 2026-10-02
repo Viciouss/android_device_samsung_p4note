@@ -4,6 +4,11 @@ PRODUCT_PACKAGES += \
     android.hardware.audio.effect@6.0-impl \
     android.hardware.soundtrigger@2.2-impl \
 
+# Put the mixer into standby 1 s after the last track instead of 3 s: the mixer
+# otherwise keeps writing silence at ~400 wakeups/s after every touch sound
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.audio.flinger_standbytime_ms=1000
+
 # HAL for handling audio frames
 PRODUCT_PACKAGES += \
     audio.primary.n8000
