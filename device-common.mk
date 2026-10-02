@@ -109,6 +109,11 @@ $(call inherit-product,$(LOCAL_PATH)/wifi/wifi.mk)
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
 $(call inherit-product,$(SRC_TARGET_DIR)/product/large_screen_common.mk)
 
+# Settings ships no dexpreopt profile and falls back to verify-only;
+# its Compose (SPA) pages are UI-thread-bound in the interpreter/JIT.
+PRODUCT_DEXPREOPT_SPEED_APPS += \
+    Settings
+
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
