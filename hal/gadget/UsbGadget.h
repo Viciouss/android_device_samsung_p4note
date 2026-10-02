@@ -63,7 +63,7 @@ using ::android::hardware::usb::gadget::setVidPid;
 using ::android::hardware::usb::gadget::unlinkFunctions;
 using ::std::string;
 
-constexpr char kGadgetName[] = "12480000.hsotg";
+constexpr char kGadgetName[] = "12480000.usb";
 static MonitorFfs monitorFfs(kGadgetName);
 
 struct UsbGadget : public IUsbGadget {
