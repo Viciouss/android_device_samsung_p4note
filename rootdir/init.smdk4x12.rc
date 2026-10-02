@@ -42,12 +42,6 @@ on post-fs
     setrlimit 8 67108864 67108864
     class_start animation
 
-    exec u:r:modprobe:s0 -- /vendor/bin/modprobe -a -d \
-        /vendor/lib/modules atmel_mxt_ts.ko bluetooth.ko bnep.ko brcmfmac.ko brcmutil.ko btbcm.ko cpufreq_conservative.ko \
-        cpufreq_powersave.ko cpufreq_userspace.ko hci_uart.ko hidp.ko kheaders.ko rfcomm.ko s5p-jpeg.ko s5p-mfc.ko \
-        v4l2-mem2mem.ko videobuf2-common.ko videobuf2-dma-contig.ko videobuf2-memops.ko videobuf2-v4l2.ko \
-        wacom_g5sp.ko leds-sgm3140.ko
-
 on post-fs-data
     setprop init.svc.console stopped
     # Set indication (checked by vold) that we have finished this action

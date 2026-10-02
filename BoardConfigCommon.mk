@@ -36,6 +36,39 @@ TARGET_KERNEL_CONFIG := p4note_android_defconfig
 BOARD_KERNEL_IMAGE_NAME := zImage-dtb
 TARGET_KERNEL_ADDITIONAL_FLAGS += CROSS_COMPILE=arm-linux-gnueabi-
 
+BOARD_VENDOR_KERNEL_MODULES_LOAD := \
+    atmel_mxt_ts.ko \
+    bluetooth.ko \
+    bnep.ko \
+    btbcm.ko \
+    cpufreq_conservative.ko \
+    cpufreq_powersave.ko \
+    cpufreq_userspace.ko \
+    exynos-fimc-is.ko \
+    exynos-fimc-lite.ko \
+    exynos4-is-common.ko \
+    hci_uart.ko \
+    hidp.ko \
+    isx012.ko \
+    kheaders.ko \
+    leds-sgm3140.ko \
+    rfcomm.ko \
+    s5k6a3.ko \
+    s5p-csis.ko \
+    s5p-fimc.ko \
+    s5p-jpeg.ko \
+    s5p-mfc.ko \
+    v4l2-mem2mem.ko \
+    videobuf2-common.ko \
+    videobuf2-dma-contig.ko \
+    videobuf2-memops.ko \
+    videobuf2-v4l2.ko \
+    wacom_g5sp.ko \
+    brcmfmac.ko \
+    brcmfmac-wcc.ko \
+    brcmfmac-cyw.ko \
+    brcmfmac-bca.ko
+
 BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
 
