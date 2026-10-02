@@ -99,7 +99,10 @@ class V4L2Wrapper {
   // next frame (frames arriving while none is waiting are dropped).
   virtual int EnqueueRequest(
       std::shared_ptr<default_camera_hal::CaptureRequest> request);
-  // Waits up to kDequeueTimeoutMs for a frame. Returns -EAGAIN when no request
+  // Waits up to kDequeueTimeoutMs for a frame without taking any lock.
+  // Returns true when one is ready to dequeue.
+  virtual bool WaitForFrame();
+  // Dequeues a ready frame without waiting. Returns -EAGAIN when no request
   // was completed, and 0 with |*request| set when one was.
   virtual int DequeueRequest(
       std::shared_ptr<default_camera_hal::CaptureRequest>* request);

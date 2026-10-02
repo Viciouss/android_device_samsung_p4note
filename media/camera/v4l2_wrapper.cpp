@@ -42,7 +42,7 @@ using default_camera_hal::CaptureRequest;
 // Streaming needs a few in flight so the sensor isn't starved between frames.
 const uint32_t kNumDeviceBuffers = 4;
 
-// How long DequeueRequest() waits for a frame before returning -EAGAIN.
+// How long WaitForFrame() waits for a frame before giving up.
 const int kDequeueTimeoutMs = 200;
 
 const int32_t kStandardSizes[][2] = {
@@ -904,6 +904,20 @@ int V4L2Wrapper::EnqueueRequest(
   return 0;
 }
 
+bool V4L2Wrapper::WaitForFrame() {
+  // Wait without holding |device_lock_|, so controls and formats can still be
+  // set meanwhile. If Reopen() closes the fd during the poll, the poll holds
+  // its own reference to the old file and just times out.
+  int fd;
+  {
+    std::lock_guard<std::mutex> lock(device_lock_);
+    fd = device_fd_.get();
+  }
+  pollfd poll_fd = {fd, POLLIN, 0};
+  int ready = TEMP_FAILURE_RETRY(poll(&poll_fd, 1, kDequeueTimeoutMs));
+  return ready > 0 && (poll_fd.revents & POLLIN);
+}
+
 int V4L2Wrapper::DequeueRequest(std::shared_ptr<CaptureRequest>* request) {
   if (!format_) {
     HAL_LOGV(
@@ -915,18 +929,7 @@ int V4L2Wrapper::DequeueRequest(std::shared_ptr<CaptureRequest>* request) {
     return -EAGAIN;
   }
 
-  // Wait for a frame without holding |device_lock_|, so controls and
-  // formats can still be set meanwhile.
-  int fd;
-  {
-    std::lock_guard<std::mutex> lock(device_lock_);
-    fd = device_fd_.get();
-  }
-  pollfd poll_fd = {fd, POLLIN, 0};
-  int ready = TEMP_FAILURE_RETRY(poll(&poll_fd, 1, kDequeueTimeoutMs));
-  if (ready <= 0 || !(poll_fd.revents & POLLIN)) {
-    return -EAGAIN;
-  }
+  // The device is open nonblocking: without a frame, DQBUF fails with EAGAIN.
 
   v4l2_plane plane;
   memset(&plane, 0, sizeof(plane));

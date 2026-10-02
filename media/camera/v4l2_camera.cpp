@@ -309,9 +309,15 @@ bool V4L2Camera::dequeueRequestBuffers() {
   std::shared_ptr<default_camera_hal::CaptureRequest> request;
   int res;
 
+  if (device_->streaming() && !device_->WaitForFrame()) {
+    return true;
+  }
+
   {
     // Held while the device buffers are used, so setupStreams() can't
-    // reallocate them underneath.
+    // reallocate them underneath. Not held while waiting for a frame: this
+    // loop would take it back at once, and std::mutex isn't fair, so
+    // flushBuffers() and setupStreams() starved for seconds.
     std::unique_lock<std::mutex> lock(in_flight_lock_);
     if (!device_->streaming()) {
       // Nothing to dequeue until the enqueue thread turns the stream on.
