@@ -65,5 +65,8 @@
 
      <!-- Cap recents to limit full-resolution task snapshots in memory. -->
      <integer name="config_maxNumVisibleRecentTasks">8</integer>
+
+     <!-- Wallpaper zoom forces SF GPU composition (FIMD has no scaler) -->
+     <item name="config_wallpaperMaxScale" format="float" type="dimen">1</item>
     
 </resources>
