@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-ifneq ($(filter p4note, $(TARGET_DEVICE)),)
+ifneq ($(filter p4noterf, $(TARGET_DEVICE)),)
 
 LOCAL_PATH := $(call my-dir)
 

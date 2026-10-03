@@ -27,10 +27,10 @@ TARGET_SCREEN_WIDTH := 720
 PRODUCT_CHARACTERISTICS := tablet
 
 # Inherit from our custom product configuration
-$(call inherit-product, vendor/omni/config/common.mk)
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := p4note
+PRODUCT_DEVICE := p4noterf
 PRODUCT_NAME := omni_p4note
 PRODUCT_BRAND := Samsung
 PRODUCT_MODEL := GT-N8000
