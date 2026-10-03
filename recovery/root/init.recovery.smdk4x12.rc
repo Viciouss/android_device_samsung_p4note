@@ -7,6 +7,7 @@ on init
     write /config/usb_gadget/g1/strings/0x409/manufacturer "Samsung"
     write /config/usb_gadget/g1/strings/0x409/product "Note"
     mkdir /config/usb_gadget/g1/functions/ffs.adb
+    mkdir /config/usb_gadget/g1/functions/ffs.mtp
     mkdir /config/usb_gadget/g1/configs/b.1 0770
     mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409 0770
     write /config/usb_gadget/g1/os_desc/b_vendor_code 0x1
@@ -15,6 +16,7 @@ on init
 
     mkdir /dev/usb-ffs 0775 shell shell
     mkdir /dev/usb-ffs/adb 0770 shell shell
+    mkdir /dev/usb-ffs/mtp 0770 shell shell
 
     setprop sys.usb.mtp.device_type 3
     setprop sys.usb.ffs.aio_compat 1
@@ -24,8 +26,15 @@ on init
     setprop sys.usb.configfs 1
 
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
+    # opened by the TWRP MTP server (recovery runs as root)
+    mount functionfs mtp /dev/usb-ffs/mtp
 
-on property:sys.usb.ffs.ready=1
+    setprop sys.usb.p4note.bootstrapped 0
+
+# Initial config only, TWRP switches to mtp,adb on its own later and adbd
+# sets sys.usb.ffs.ready again each time it is restarted
+on property:sys.usb.ffs.ready=1 && property:sys.usb.p4note.bootstrapped=0
+    setprop sys.usb.p4note.bootstrapped 1
     setprop sys.usb.config adb
 
 on property:sys.usb.config=none
@@ -39,9 +48,12 @@ on property:sys.usb.config=none
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb
+    # TWRP got there first, don't fall back to adb only
+    setprop sys.usb.p4note.bootstrapped 1
     start adbd
 
-on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb
+# sys.usb.ffs.mtp.ready is set once the MTP server has written its descriptors
+on property:sys.usb.ffs.ready=1 && property:sys.usb.ffs.mtp.ready=1 && property:sys.usb.config=mtp,adb
     write /config/usb_gadget/g1/UDC ""
     write /config/usb_gadget/g1/os_desc/use 1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp_adb"

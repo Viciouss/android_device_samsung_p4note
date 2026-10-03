@@ -15,4 +15,6 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/omni_p4note.mk
+    $(LOCAL_DIR)/n8000/omni_n8000.mk \
+    $(LOCAL_DIR)/n8010/omni_n8010.mk \
+    $(LOCAL_DIR)/n8020/omni_n8020.mk

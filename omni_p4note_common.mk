@@ -32,11 +32,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
 # Inherit from our custom product configuration
 $(call inherit-product, vendor/omni/config/common.mk)
 
-# Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := p4note
-PRODUCT_NAME := omni_p4note
+# PRODUCT_DEVICE, PRODUCT_NAME and PRODUCT_MODEL are set by the per device makefiles
 PRODUCT_BRAND := Samsung
-PRODUCT_MODEL := GT-N8000
 PRODUCT_MANUFACTURER := Samsung
 
 PRODUCT_SHIPPING_API_LEVEL := 28
