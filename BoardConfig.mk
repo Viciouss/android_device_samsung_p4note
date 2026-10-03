@@ -34,18 +34,16 @@ TARGET_COPY_OUT_VENDOR := vendor
 ## kernel config
 TARGET_NO_KERNEL := false 
 
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/zImage-dtb
+TARGET_KERNEL_SOURCE := kernel/samsung/p4note
+TARGET_KERNEL_CONFIG := p4note_recovery_defconfig
+BOARD_KERNEL_IMAGE_NAME := zImage-dtb
 
 BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_PAGESIZE := 2048
-
-## kernel modules (temporary solution)
-BOARD_VENDOR_KERNEL_MODULES := \
-    $(wildcard $(DEVICE_PATH)/prebuilt/modules/*.ko)
     
 ## boot image
 BOARD_KERNEL_TAGS_OFFSET 	:= 0x00000100
-BOARD_KERNEL_OFFSET		:= 0x00008000
+BOARD_KERNEL_OFFSET		    := 0x00008000
 BOARD_RAMDISK_OFFSET     	:= 0x02000000
 # version 0 means that the device launched before android 9
 BOARD_BOOT_HEADER_VERSION 	:= 0
@@ -54,6 +52,9 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 #BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
+
+## other file system options
+TARGET_USERIMAGES_USE_F2FS := true
 
 ## SELinux
 #BOARD_SEPOLICY_DIRS := device/samsung/p4note/sepolicy
@@ -80,13 +81,29 @@ TW_USE_NEW_MINADBD := true
 TW_NO_SCREEN_TIMEOUT := true
 TW_MTP_DEVICE := /dev/usb-ffs/mtp
 LZMA_RAMDISK_TARGETS := recovery
+# core/Makefile assigns this unconditionally, hence the override.
+# The kernel needs CONFIG_RD_XZ and CONFIG_XZ_DEC_ARMTHUMB.
+override RECOVERY_RAMDISK_COMPRESSOR := xz --check=crc32 --armthumb --lzma2=preset=9e,dict=32MiB -f -c
 RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
-TARGET_USES_LOGD := true
-TWRP_INCLUDE_LOGCAT := true
 TW_EXCLUDE_NANO := true
 TW_EXCLUDE_BASH := true
+TW_EXCLUDE_PYTHON := true
+TW_NO_EXFAT_FUSE := true
+TW_NO_EXFAT := true
 
 TW_CUSTOM_BATTERY_PATH := /sys/class/power_supply/max170xx_battery
+
+# charger is never started in recovery (init.recovery.hlthchrg.rc is not imported),
+# nothing in the ramdisk links against the ubsan runtime, and the vibrator
+# HAL libs are only pulled in by the FBE file list (unused with TW_NO_HAPTICS)
+# UI languages: English only
+BOARD_RECOVERY_IMAGE_PREPARE = \
+    rm -f $(TARGET_RECOVERY_ROOT_OUT)/sbin/charger \
+          $(TARGET_RECOVERY_ROOT_OUT)/charger \
+          $(TARGET_RECOVERY_ROOT_OUT)/init.recovery.hlthchrg.rc \
+          $(TARGET_RECOVERY_ROOT_OUT)/sbin/libclang_rt.ubsan_standalone-arm-android.so \
+          $(TARGET_RECOVERY_ROOT_OUT)/sbin/android.hardware.vibrator@1.*.so; \
+    find $(TARGET_RECOVERY_ROOT_OUT)/twres/languages -type f ! -name en.xml -delete;
 
 ## vndk
 PRODUCT_FULL_TREBLE_OVERRIDE := true

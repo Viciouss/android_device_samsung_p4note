@@ -21,10 +21,13 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 AB_OTA_UPDATER := false
 
 ## display setting
-TARGET_SCREEN_HEIGHT := 1280
-TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 720
+TARGET_SCREEN_WIDTH := 1280
 
 PRODUCT_CHARACTERISTICS := tablet
+
+# must come before vendor/omni/config/common.mk, which sets ro.adb.secure=1
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
 
 # Inherit from our custom product configuration
 $(call inherit-product, vendor/omni/config/common.mk)
@@ -36,4 +39,4 @@ PRODUCT_BRAND := Samsung
 PRODUCT_MODEL := GT-N8000
 PRODUCT_MANUFACTURER := Samsung
 
-PRODUCT_SHIPPING_API_LEVEL := 29
+PRODUCT_SHIPPING_API_LEVEL := 28
