@@ -87,6 +87,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.lmk.thrashing_limit=30 \
     ro.lmk.thrashing_limit_decay=50
 
+# Let MediaProvider hand /sdcard file I/O straight to f2fs, the FUSE
+# dirty limit throttles buffered writes to ~100 KB/s otherwise
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.sys.fuse.passthrough.enable=true
+
 ## other properties
 PRODUCT_SHIPPING_API_LEVEL := 31
 
