@@ -77,7 +77,7 @@ PRODUCT_PACKAGES += \
 ## performance tuning
 # keep dex2oat in check so it doesn't stall the whole system
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    dalvik.vm.dex2oat-threads=1 \
+    dalvik.vm.dex2oat-threads=2 \
     dalvik.vm.image-dex2oat-threads=1
 
 # Not a low_ram device: keep only lmkd's low_ram tuning
