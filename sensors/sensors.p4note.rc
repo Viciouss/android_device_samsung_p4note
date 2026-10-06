@@ -18,3 +18,7 @@ on early-init
     setprop ro.iio.illuminance.name "AL3201"
     setprop ro.iio.illuminance.vendor "Dyna Image"
     setprop ro.iio.illuminance.quirks "no-trig,no-event"
+    # stock reports 0.97 lux per count, the driver 0.125
+    setprop ro.iio.illuminance.opt_scale 7.76
+    setprop ro.iio.illuminance.max_range 63570
+    setprop ro.iio.illuminance.resolution 0.97

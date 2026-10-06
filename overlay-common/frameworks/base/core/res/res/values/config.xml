@@ -68,5 +68,29 @@
 
      <!-- Wallpaper zoom forces SF GPU composition (FIMD has no scaler) -->
      <item name="config_wallpaperMaxScale" format="float" type="dimen">1</item>
+
+     <!-- AL3201 ambient light sensor -->
+     <bool name="config_automatic_brightness_available">true</bool>
+
+     <!-- Lux thresholds, taken from the stock dynamic auto brightness table -->
+     <integer-array name="config_autoBrightnessLevels">
+         <item>5</item>
+         <item>50</item>
+         <item>500</item>
+         <item>5000</item>
+         <item>15000</item>
+         <item>16000</item>
+     </integer-array>
+
+     <!-- Backlight (0-255) per lux range, one more entry than the levels -->
+     <integer-array name="config_autoBrightnessLcdBacklightValues">
+         <item>36</item>
+         <item>43</item>
+         <item>90</item>
+         <item>150</item>
+         <item>205</item>
+         <item>230</item>
+         <item>255</item>
+     </integer-array>
     
 </resources>
