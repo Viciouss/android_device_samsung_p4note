@@ -85,7 +85,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.per_app_memcg=true \
     ro.lmk.psi_partial_stall_ms=200 \
     ro.lmk.thrashing_limit=30 \
-    ro.lmk.thrashing_limit_decay=50
+    ro.lmk.thrashing_limit_decay=50 \
+    ro.lmk.filecache_min_kb=102400 \
+    ro.lmk.swap_free_low_percentage=20 \
+    ro.lmk.kill_heaviest_task=true
 
 # Let MediaProvider hand /sdcard file I/O straight to f2fs, the FUSE
 # dirty limit throttles buffered writes to ~100 KB/s otherwise
